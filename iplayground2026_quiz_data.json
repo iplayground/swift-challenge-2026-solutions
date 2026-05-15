@@ -1,18 +1,25 @@
 {
   "meta": {
-    "version": "2.0",
+    "version": "2.1",
     "title": "iOSDC Quiz 題庫",
     "language": "zh-TW",
     "created_at": "2026-05-08",
-    "total_questions": 17
+    "total_questions": 17,
+    "updated_at": "2026-05-15",
+    "changelog": [
+      "v2.0: 初始版本，17 題，三語言",
+      "v2.1: Q1/Q4 補齊至 4 選項；Concurrency 3 題 code_output → multiple_choice；Track 重新平衡（Q8/Q9/Q11 移至 debug-lifecycle）；加入 category、estimated_time_seconds、hint、related_questions；補齊 6 題 code_snippet"
+    ]
   },
-
   "tracks": [
     {
       "id": "swift-basics",
       "name": "Swift 基礎語法",
       "description": "型別系統、控制流程、命名規則、API 設計",
-      "target_difficulty": { "min": 1, "max": 3 },
+      "target_difficulty": {
+        "min": 1,
+        "max": 3
+      },
       "target_question_count": 5,
       "session_slot": "day1_am"
     },
@@ -20,7 +27,10 @@
       "id": "swiftui-uikit",
       "name": "SwiftUI / UIKit",
       "description": "Modifier、Layout、Preview、SwiftData",
-      "target_difficulty": { "min": 1, "max": 4 },
+      "target_difficulty": {
+        "min": 1,
+        "max": 4
+      },
       "target_question_count": 5,
       "session_slot": "day1_pm"
     },
@@ -28,7 +38,10 @@
       "id": "swift-concurrency",
       "name": "Swift Concurrency",
       "description": "MainActor、Task、Sendable、Suspension Point",
-      "target_difficulty": { "min": 3, "max": 5 },
+      "target_difficulty": {
+        "min": 3,
+        "max": 5
+      },
       "target_question_count": 5,
       "session_slot": "day2_am"
     },
@@ -36,12 +49,14 @@
       "id": "debug-lifecycle",
       "name": "Debug / App Lifecycle",
       "description": "存取控制、Optional、App 生命週期、除錯技巧",
-      "target_difficulty": { "min": 2, "max": 4 },
+      "target_difficulty": {
+        "min": 2,
+        "max": 4
+      },
       "target_question_count": 5,
       "session_slot": "day2_pm"
     }
   ],
-
   "sources": [
     {
       "id": "andpad-2025",
@@ -65,9 +80,7 @@
       "url": "https://fortee.jp/iosdc-japan-2024/proposal/81298e94-b261-4527-9d44-49631b7049d7"
     }
   ],
-
   "questions": [
-
     {
       "id": "andpad-2025-d0-q1",
       "source_id": "andpad-2025",
@@ -75,23 +88,43 @@
       "number": 1,
       "type": "multiple_choice",
       "difficulty": 2,
-      "topic": ["sorted", "mutating", "naming-convention"],
+      "topic": [
+        "sorted",
+        "mutating",
+        "naming-convention"
+      ],
       "swift_version": "6.0",
       "question": {
         "zh_tw": "填入 /* ? */ 讓函式回傳 [Int]",
-        "ja": "/* ? */ に当てはまるコードは？（返り値 [Int]）"
+        "ja": "/* ? */ に当てはまるコードは？（返り値 [Int]）",
+        "en": "Fill in /* ? */ so the function returns [Int]"
       },
       "code_snippet": "func sorting(_ numbers: [Int]) -> [Int] {\n    /* ? */\n}",
       "answer_format": {
         "options": [
-          { "label": "A", "text": "numbers.sorted()" },
-          { "label": "B", "text": "numbers.sort()" }
+          {
+            "label": "A",
+            "text": "numbers.sorted()"
+          },
+          {
+            "label": "B",
+            "text": "numbers.sort()"
+          },
+          {
+            "label": "C",
+            "text": "return numbers.sorted()"
+          },
+          {
+            "label": "D",
+            "text": "var r = numbers; r.sort(); return r"
+          }
         ],
         "correct": "A"
       },
       "explanation": {
-        "zh_tw": "sorted() 回傳新的已排序陣列（non-mutating），符合 -> [Int] 的回傳值需求。sort() 是直接修改原陣列（mutating），回傳值為 Void，不能用在這裡。Swift API 命名慣例：mutating 用動詞原形（sort），non-mutating 用過去分詞（sorted）。",
-        "ja": "sorted() は新しい配列を返す（non-mutating）。sort() は in-place で返り値 Void。Swift API Design Guidelines の ed/ing 命名規則と対応。"
+        "zh_tw": "sorted() 回傳新的已排序陣列（non-mutating），符合 -> [Int] 的回傳值需求。sort() 直接修改原陣列（mutating），回傳 Void，無法用在這裡。C 語法錯誤：sorted() 本身就是回傳值，不能再用 return 包裹成獨立表達式。D 手動複製再 sort 雖可運作但多此一舉。",
+        "ja": "sorted() は新しい配列を返す（non-mutating）。sort() は in-place で Void を返す。C は構文エラー。D は動くが冗長。",
+        "en": "`sorted()` returns a new sorted array (non-mutating), satisfying `-> [Int]`. `sort()` mutates in place and returns `Void`. C is a syntax error: `sorted()` is already the return value and cannot be wrapped with a standalone `return`. D works but is unnecessarily verbose compared to simply calling `sorted()`."
       },
       "reference_url": "https://tech.andpad.co.jp/entry/2025/09/20/100000",
       "curation": {
@@ -102,10 +135,15 @@
         "reviewed_by": null,
         "reviewed_at": null
       },
-      "track_ids": ["swift-basics"],
-      "track_order": 1
+      "track_ids": [
+        "swift-basics"
+      ],
+      "track_order": 1,
+      "category": "type-system",
+      "estimated_time_seconds": 60,
+      "related_questions": [],
+      "hint": null
     },
-
     {
       "id": "andpad-2025-d0-q2",
       "source_id": "andpad-2025",
@@ -113,25 +151,44 @@
       "number": 2,
       "type": "multiple_choice",
       "difficulty": 2,
-      "topic": ["guard", "control-flow", "never", "assertion-failure"],
+      "topic": [
+        "guard",
+        "control-flow",
+        "never",
+        "assertion-failure"
+      ],
       "swift_version": "6.0",
       "question": {
         "zh_tw": "哪一個放在 guard else 裡會編譯失敗？",
-        "ja": "コンパイルが通らないものを選べ（guard else 節）"
+        "ja": "コンパイルが通らないものを選べ（guard else 節）",
+        "en": "Which of the following causes a compile error inside a guard else clause?"
       },
       "code_snippet": "guard isFoo else { /* ? */ }",
       "answer_format": {
         "options": [
-          { "label": "A", "text": "return" },
-          { "label": "B", "text": "throw FooError()" },
-          { "label": "C", "text": "assertionFailure()" },
-          { "label": "D", "text": "fatalError()" }
+          {
+            "label": "A",
+            "text": "return"
+          },
+          {
+            "label": "B",
+            "text": "throw FooError()"
+          },
+          {
+            "label": "C",
+            "text": "assertionFailure()"
+          },
+          {
+            "label": "D",
+            "text": "fatalError()"
+          }
         ],
         "correct": "C"
       },
       "explanation": {
         "zh_tw": "guard 的 else 區塊必須確保後續程式碼不會被執行到。assertionFailure() 回傳 Void，在開啟最佳化（非 -Onone）模式下程式會繼續執行，無法滿足控制流保證，所以編譯失敗。fatalError() 回傳 Never（代表絕對終止），可以使用。",
-        "ja": "guard の else 節は必ず制御が抜けることを保証する必要あり。assertionFailure() の返り値は Void で -Onone 以外では処理継続するためコンパイルエラー。fatalError() は Never 型を返す。"
+        "ja": "guard の else 節は必ず制御が抜けることを保証する必要あり。assertionFailure() の返り値は Void で -Onone 以外では処理継続するためコンパイルエラー。fatalError() は Never 型を返す。",
+        "en": "The `else` block of a `guard` statement must guarantee that the code following it will never execute. `assertionFailure()` returns `Void` — in optimized builds (non `-Onone`), execution continues past it, so the compiler cannot guarantee control flow exits, causing a compile error. `fatalError()` returns `Never`, meaning the program unconditionally terminates, which satisfies the requirement."
       },
       "reference_url": "https://tech.andpad.co.jp/entry/2025/09/20/100000",
       "curation": {
@@ -142,10 +199,17 @@
         "reviewed_by": null,
         "reviewed_at": null
       },
-      "track_ids": ["swift-basics"],
-      "track_order": 2
+      "track_ids": [
+        "swift-basics"
+      ],
+      "track_order": 2,
+      "category": "control-flow",
+      "estimated_time_seconds": 60,
+      "related_questions": [
+        "andpad-2025-d0-q3"
+      ],
+      "hint": null
     },
-
     {
       "id": "andpad-2025-d0-q3",
       "source_id": "andpad-2025",
@@ -153,25 +217,43 @@
       "number": 3,
       "type": "multiple_choice",
       "difficulty": 4,
-      "topic": ["never", "uninhabited-type", "control-flow"],
+      "topic": [
+        "never",
+        "uninhabited-type",
+        "control-flow"
+      ],
       "swift_version": "6.0",
       "question": {
         "zh_tw": "fatalError() 的回傳型別是什麼？",
-        "ja": "fatalError() の返り値型は？"
+        "ja": "fatalError() の返り値型は？",
+        "en": "What is the return type of fatalError()?"
       },
       "code_snippet": null,
       "answer_format": {
         "options": [
-          { "label": "A", "text": "Void" },
-          { "label": "B", "text": "Int" },
-          { "label": "C", "text": "String" },
-          { "label": "D", "text": "Never" }
+          {
+            "label": "A",
+            "text": "Void"
+          },
+          {
+            "label": "B",
+            "text": "Int"
+          },
+          {
+            "label": "C",
+            "text": "String"
+          },
+          {
+            "label": "D",
+            "text": "Never"
+          }
         ],
         "correct": "D"
       },
       "explanation": {
         "zh_tw": "Never 是 Swift 的「不可居住型別（uninhabited type）」，無法建立 Never 型別的實例。呼叫 fatalError() 後程式一定終止，後續程式碼絕對不會執行，因此可以滿足 guard else 的控制流要求。同理 preconditionFailure() 也是 Never 型別。",
-        "ja": "Never 型のインスタンスは作れず、呼んだ時点で以降の処理は実行不可能。guard の else 節でも使える。Swift の uninhabited type の概念。"
+        "ja": "Never 型のインスタンスは作れず、呼んだ時点で以降の処理は実行不可能。guard の else 節でも使える。Swift の uninhabited type の概念。",
+        "en": "`Never` is Swift's uninhabited type — no instance of `Never` can ever be created. Calling `fatalError()` unconditionally terminates the program, so code after the call is provably unreachable. This allows it to satisfy the `guard else` control flow requirement. `preconditionFailure()` also returns `Never` for the same reason."
       },
       "reference_url": "https://tech.andpad.co.jp/entry/2025/09/20/100000",
       "curation": {
@@ -182,10 +264,21 @@
         "reviewed_by": null,
         "reviewed_at": null
       },
-      "track_ids": ["swift-basics"],
-      "track_order": 3
+      "track_ids": [
+        "swift-concurrency"
+      ],
+      "track_order": 4,
+      "category": "type-system",
+      "estimated_time_seconds": 60,
+      "related_questions": [
+        "andpad-2025-d0-q2"
+      ],
+      "hint": {
+        "zh_tw": "如果一個函式「永遠不會正常回傳」，它的回傳型別應該是什麼？",
+        "en": "If a function never returns normally, what should its return type be?",
+        "ja": "絶対に正常に返らない関数の返り値型は何か？"
+      }
     },
-
     {
       "id": "andpad-2025-d0-q4",
       "source_id": "andpad-2025",
@@ -193,24 +286,44 @@
       "number": 4,
       "type": "multiple_choice",
       "difficulty": 3,
-      "topic": ["comparable", "protocol", "static-method", "operator"],
+      "topic": [
+        "comparable",
+        "protocol",
+        "static-method",
+        "operator"
+      ],
       "swift_version": "6.0",
       "question": {
         "zh_tw": "哪一個 < 運算子定義能通過編譯？",
-        "ja": "コンパイルが通る < 演算子の定義は？"
+        "ja": "コンパイルが通る < 演算子の定義は？",
+        "en": "Which < operator definition compiles successfully?"
       },
       "code_snippet": "struct MyInt: Comparable {\n    var value: Int\n}",
       "answer_format": {
         "options": [
-          { "label": "A", "text": "static func <(l: Self, r: Self) -> Bool { ... }" },
-          { "label": "B", "text": "func <(l: MyInt, r: MyInt) -> Bool { ... }" },
-          { "label": "C", "text": "static func <(l: MyInt, r: MyInt) -> Bool { ... }" }
+          {
+            "label": "A",
+            "text": "static func <(l: Self, r: Self) -> Bool { ... }"
+          },
+          {
+            "label": "B",
+            "text": "func <(l: MyInt, r: MyInt) -> Bool { ... }"
+          },
+          {
+            "label": "C",
+            "text": "static func <(l: MyInt, r: MyInt) -> Bool { ... }"
+          },
+          {
+            "label": "D",
+            "text": "func <(l: Self, r: Self) -> Bool { ... }"
+          }
         ],
         "correct": "C"
       },
       "explanation": {
-        "zh_tw": "Comparable 協定要求 < 必須是 static 方法。A 雖然在 struct 內 Self 等同 MyInt，但協定要求定義時要寫明具體型別名稱，使用 Self 無法通過編譯。B 缺少 static 關鍵字，不符合協定需求。",
-        "ja": "Comparable の < は static メソッドとして定義が必要。Self は struct 内では MyInt と同義だが、プロトコル要件の定義としては static + 具体型名が正しい形。"
+        "zh_tw": "Comparable 要求 < 必須是 static 方法且使用具體型別名稱。A 是 static 但用了 Self（協定要求明確寫出具體型別）。B 缺少 static。D 同時缺少 static 又用了 Self，兩個問題都有。只有 C 正確。",
+        "ja": "A は static だが Self を使う。B は static がない。D は両方の問題を持つ。C のみが正しい。",
+        "en": "`Comparable` requires `<` to be `static` with a concrete type name. A is `static` but uses `Self` — the concrete type is required. B is missing `static`. D has both problems: no `static` and uses `Self`. Only C is correct."
       },
       "reference_url": "https://tech.andpad.co.jp/entry/2025/09/20/100000",
       "curation": {
@@ -221,10 +334,19 @@
         "reviewed_by": null,
         "reviewed_at": null
       },
-      "track_ids": ["swift-basics"],
-      "track_order": 4
+      "track_ids": [
+        "swift-basics"
+      ],
+      "track_order": 4,
+      "category": "type-system",
+      "estimated_time_seconds": 75,
+      "related_questions": [],
+      "hint": {
+        "zh_tw": "Comparable 要求 < 是一個可以不透過實例呼叫的方法。",
+        "en": "Comparable requires `<` to be callable without an instance.",
+        "ja": "Comparable の < はインスタンスなしで呼べるメソッドである必要がある。"
+      }
     },
-
     {
       "id": "andpad-2025-d1am-q5",
       "source_id": "andpad-2025",
@@ -232,25 +354,42 @@
       "number": 5,
       "type": "multiple_choice",
       "difficulty": 1,
-      "topic": ["string-interpolation", "syntax"],
+      "topic": [
+        "string-interpolation",
+        "syntax"
+      ],
       "swift_version": "6.0",
       "question": {
         "zh_tw": "將變數插入字串的正確語法？",
-        "ja": "変数を文字列に挿入する記法は？"
+        "ja": "変数を文字列に挿入する記法は？",
+        "en": "What is the correct syntax for string interpolation in Swift?"
       },
-      "code_snippet": null,
+      "code_snippet": "let name = \"iPlayground\"\nprint(\"Hello, \\(name)!\")  // 字串插值的正確寫法？",
       "answer_format": {
         "options": [
-          { "label": "A", "text": "\"$value\"" },
-          { "label": "B", "text": "\"${value}\"" },
-          { "label": "C", "text": "\"\\value\"" },
-          { "label": "D", "text": "\"\\(value)\"" }
+          {
+            "label": "A",
+            "text": "\"$value\""
+          },
+          {
+            "label": "B",
+            "text": "\"${value}\""
+          },
+          {
+            "label": "C",
+            "text": "\"\\value\""
+          },
+          {
+            "label": "D",
+            "text": "\"\\(value)\""
+          }
         ],
         "correct": "D"
       },
       "explanation": {
         "zh_tw": "Swift 字串插值語法為 \\(變數名)。$ 與 ${ } 是 JavaScript 等語言的寫法，Swift 不支援。",
-        "ja": "Swift の文字列 interpolation は \\(value) 形式。$ や ${ } は JavaScript 等の記法。"
+        "ja": "Swift の文字列 interpolation は \\(value) 形式。$ や ${ } は JavaScript 等の記法。",
+        "en": "Swift string interpolation uses the `\\(expression)` syntax. The `$` and `${ }` forms are from JavaScript and other languages — Swift does not support them."
       },
       "reference_url": "https://tech.andpad.co.jp/entry/2025/09/21/130000",
       "curation": {
@@ -261,10 +400,15 @@
         "reviewed_by": null,
         "reviewed_at": null
       },
-      "track_ids": ["swift-basics"],
-      "track_order": 5
+      "track_ids": [
+        "swift-basics"
+      ],
+      "track_order": 5,
+      "category": "syntax",
+      "estimated_time_seconds": 60,
+      "related_questions": [],
+      "hint": null
     },
-
     {
       "id": "andpad-2025-d1am-q6",
       "source_id": "andpad-2025",
@@ -272,25 +416,43 @@
       "number": 6,
       "type": "multiple_choice",
       "difficulty": 2,
-      "topic": ["error-handling", "catch-pattern", "type-casting"],
+      "topic": [
+        "error-handling",
+        "catch-pattern",
+        "type-casting"
+      ],
       "swift_version": "6.0",
       "question": {
         "zh_tw": "只捕捉 FooError 的正確 catch 寫法？",
-        "ja": "FooError だけを catch する正しい書き方は？"
+        "ja": "FooError だけを catch する正しい書き方は？",
+        "en": "What is the correct catch syntax to catch only FooError?"
       },
-      "code_snippet": null,
+      "code_snippet": "do {\n    try riskyOperation()\n} catch /* ? */ {\n    // 只捕捉 FooError\n}",
       "answer_format": {
         "options": [
-          { "label": "A", "text": "catch FooError" },
-          { "label": "B", "text": "catch FooError()" },
-          { "label": "C", "text": "catch is FooError" },
-          { "label": "D", "text": "catch as FooError" }
+          {
+            "label": "A",
+            "text": "catch FooError"
+          },
+          {
+            "label": "B",
+            "text": "catch FooError()"
+          },
+          {
+            "label": "C",
+            "text": "catch is FooError"
+          },
+          {
+            "label": "D",
+            "text": "catch as FooError"
+          }
         ],
         "correct": "C"
       },
       "explanation": {
         "zh_tw": "catch is FooError 是型別轉換模式（type-casting pattern），當錯誤是 FooError 型別時就匹配。catch as 的正確寫法是 catch let error as FooError（需要綁定變數），不能單獨使用 catch as FooError。",
-        "ja": "is は type-casting パターン。catch as は let error as 形式が正しい。"
+        "ja": "is は type-casting パターン。catch as は let error as 形式が正しい。",
+        "en": "`catch is FooError` uses the type-casting pattern: it matches when the thrown error is of type `FooError`. The correct form of `catch as` requires a binding: `catch let error as FooError`. Using `catch as FooError` alone (without `let`) is not valid Swift syntax."
       },
       "reference_url": "https://tech.andpad.co.jp/entry/2025/09/21/130000",
       "curation": {
@@ -301,10 +463,15 @@
         "reviewed_by": null,
         "reviewed_at": null
       },
-      "track_ids": ["swift-basics"],
-      "track_order": 6
+      "track_ids": [
+        "debug-lifecycle"
+      ],
+      "track_order": 6,
+      "category": "error-handling",
+      "estimated_time_seconds": 60,
+      "related_questions": [],
+      "hint": null
     },
-
     {
       "id": "andpad-2025-d1am-q7",
       "source_id": "andpad-2025",
@@ -312,25 +479,43 @@
       "number": 7,
       "type": "multiple_choice",
       "difficulty": 3,
-      "topic": ["expressible-by-literal", "protocol", "type-system"],
+      "topic": [
+        "expressible-by-literal",
+        "protocol",
+        "type-system"
+      ],
       "swift_version": "6.0",
       "question": {
         "zh_tw": "讓自訂型別支援整數 Literal 初始化，需遵循哪個協定？",
-        "ja": "整数 literal で初期化に必要なプロトコルは？"
+        "ja": "整数 literal で初期化に必要なプロトコルは？",
+        "en": "Which protocol must a custom type conform to in order to support integer literal initialization?"
       },
-      "code_snippet": null,
+      "code_snippet": "struct Celsius: /* ? */ {\n    var value: Double\n    init(integerLiteral v: Int) {\n        self.value = Double(v)\n    }\n}\nlet temp: Celsius = 37  // 整數 literal 初始化",
       "answer_format": {
         "options": [
-          { "label": "A", "text": "BinaryInteger" },
-          { "label": "B", "text": "Numeric" },
-          { "label": "C", "text": "IntegerLiteralType" },
-          { "label": "D", "text": "ExpressibleByIntegerLiteral" }
+          {
+            "label": "A",
+            "text": "BinaryInteger"
+          },
+          {
+            "label": "B",
+            "text": "Numeric"
+          },
+          {
+            "label": "C",
+            "text": "IntegerLiteralType"
+          },
+          {
+            "label": "D",
+            "text": "ExpressibleByIntegerLiteral"
+          }
         ],
         "correct": "D"
       },
       "explanation": {
         "zh_tw": "Swift 提供 ExpressibleByXXXLiteral 系列協定讓型別支援 Literal 初始化。IntegerLiteralType 是 Int 的型別別名（typealias），不是協定，容易混淆。BinaryInteger 和 Numeric 是數值運算相關的協定，與 Literal 初始化無關。",
-        "ja": "リテラル初期化には ExpressibleByXXXLiteral シリーズ。IntegerLiteralType は型エイリアス（Int の alias）。"
+        "ja": "リテラル初期化には ExpressibleByXXXLiteral シリーズ。IntegerLiteralType は型エイリアス（Int の alias）。",
+        "en": "Swift provides the `ExpressibleByXXXLiteral` family of protocols for literal initialization support. `IntegerLiteralType` is a type alias for `Int`, not a protocol — a common point of confusion. `BinaryInteger` and `Numeric` are for numeric operations and are unrelated to literal initialization."
       },
       "reference_url": "https://tech.andpad.co.jp/entry/2025/09/21/130000",
       "curation": {
@@ -341,10 +526,15 @@
         "reviewed_by": null,
         "reviewed_at": null
       },
-      "track_ids": ["swift-basics"],
-      "track_order": 7
+      "track_ids": [
+        "swift-basics"
+      ],
+      "track_order": 7,
+      "category": "type-system",
+      "estimated_time_seconds": 60,
+      "related_questions": [],
+      "hint": null
     },
-
     {
       "id": "andpad-2025-d1am-q8",
       "source_id": "andpad-2025",
@@ -352,25 +542,44 @@
       "number": 8,
       "type": "multiple_choice",
       "difficulty": 4,
-      "topic": ["rethrows", "error-handling", "closure", "throws"],
+      "topic": [
+        "rethrows",
+        "error-handling",
+        "closure",
+        "throws"
+      ],
       "swift_version": "6.0",
       "question": {
         "zh_tw": "rethrows 函式 — 哪種組合能通過編譯？",
-        "ja": "rethrows 関数 — コンパイルが通る組み合わせは？"
+        "ja": "rethrows 関数 — コンパイルが通る組み合わせは？",
+        "en": "rethrows function — which combination compiles successfully?"
       },
-      "code_snippet": null,
+      "code_snippet": "func perform(_ action: () throws -> Void) rethrows {\n    try action()\n}\n// 下列哪種呼叫方式可以通過編譯？",
       "answer_format": {
         "options": [
-          { "label": "A", "text": "傳 throwing 閉包，沒有 try" },
-          { "label": "B", "text": "傳 non-throwing 閉包，沒有 try" },
-          { "label": "C", "text": "傳 throwing 閉包，有 try，呼叫端無 throws" },
-          { "label": "D", "text": "傳 non-throwing 閉包，有 try" }
+          {
+            "label": "A",
+            "text": "傳 throwing 閉包，沒有 try"
+          },
+          {
+            "label": "B",
+            "text": "傳 non-throwing 閉包，沒有 try"
+          },
+          {
+            "label": "C",
+            "text": "傳 throwing 閉包，有 try，呼叫端無 throws"
+          },
+          {
+            "label": "D",
+            "text": "傳 non-throwing 閉包，有 try"
+          }
         ],
         "correct": "B"
       },
       "explanation": {
         "zh_tw": "rethrows 表示：只有當傳入的閉包會拋出錯誤時，函式才會拋出錯誤。傳入 non-throwing 閉包時，等同普通函式，呼叫端不需要 try，也不需要 throws。A 錯在傳入 throwing 閉包卻沒有 try。C 錯在呼叫端沒有 throws 卻傳入 throwing 閉包並加了 try。",
-        "ja": "rethrows はクロージャがエラーを投げる場合のみ throws になる。non-throwing ならエラーなしで呼べる。"
+        "ja": "rethrows はクロージャがエラーを投げる場合のみ throws になる。non-throwing ならエラーなしで呼べる。",
+        "en": "`rethrows` means the function only throws if the closure argument throws. When a non-throwing closure is passed, the function behaves like a normal function — no `try` or `throws` is needed at the call site. Option A fails because a throwing closure is passed without `try`. Option C fails because a throwing closure is passed with `try`, but the call site is not marked `throws`."
       },
       "reference_url": "https://tech.andpad.co.jp/entry/2025/09/21/130000",
       "curation": {
@@ -381,10 +590,21 @@
         "reviewed_by": null,
         "reviewed_at": null
       },
-      "track_ids": ["swift-basics", "debug-lifecycle"],
-      "track_order": 1
+      "track_ids": [
+        "debug-lifecycle"
+      ],
+      "track_order": 3,
+      "category": "error-handling",
+      "estimated_time_seconds": 75,
+      "related_questions": [
+        "andpad-2025-d1pm-q11"
+      ],
+      "hint": {
+        "zh_tw": "rethrows 的意思是：只有閉包「會拋出」時，外層函式才「需要 throws」。",
+        "en": "rethrows means the outer function only needs `throws` if the closure itself throws.",
+        "ja": "rethrows はクロージャが throws する場合のみ外側の関数も throws になる。"
+      }
     },
-
     {
       "id": "andpad-2025-d1pm-q9",
       "source_id": "andpad-2025",
@@ -392,25 +612,43 @@
       "number": 9,
       "type": "multiple_choice",
       "difficulty": 1,
-      "topic": ["argument-label", "parameter-name", "function-call"],
+      "topic": [
+        "argument-label",
+        "parameter-name",
+        "function-call"
+      ],
       "swift_version": "6.0",
       "question": {
         "zh_tw": "正確的函式呼叫寫法？\nfunc move(to destination: Point)",
-        "ja": "正しい関数呼び出しは？ func move(to destination: Point)"
+        "ja": "正しい関数呼び出しは？ func move(to destination: Point)",
+        "en": "What is the correct call site syntax?\nfunc move(to destination: Point)"
       },
       "code_snippet": "func move(to destination: Point) { ... }",
       "answer_format": {
         "options": [
-          { "label": "A", "text": "move(origin)" },
-          { "label": "B", "text": "move(to: origin)" },
-          { "label": "C", "text": "move(destination: origin)" },
-          { "label": "D", "text": "move(to destination: origin)" }
+          {
+            "label": "A",
+            "text": "move(origin)"
+          },
+          {
+            "label": "B",
+            "text": "move(to: origin)"
+          },
+          {
+            "label": "C",
+            "text": "move(destination: origin)"
+          },
+          {
+            "label": "D",
+            "text": "move(to destination: origin)"
+          }
         ],
         "correct": "B"
       },
       "explanation": {
         "zh_tw": "to 是引數標籤（argument label，外部名稱），destination 是參數名稱（parameter name，內部使用）。呼叫時使用引數標籤，所以要寫 move(to: origin)。Swift 函式可以有不同的外部與內部名稱，讓呼叫端讀起來更像自然語言。",
-        "ja": "to が引数ラベル（外側）、destination が仮引数名（内側）。呼び出し時は引数ラベルを使う。"
+        "ja": "to が引数ラベル（外側）、destination が仮引数名（内側）。呼び出し時は引数ラベルを使う。",
+        "en": "`to` is the argument label (external name), and `destination` is the parameter name (internal name). At the call site, the argument label is used, so the correct call is `move(to: origin)`. Swift functions support different external and internal names, making call sites read more like natural language."
       },
       "reference_url": "https://tech.andpad.co.jp/entry/2025/09/21/095019",
       "curation": {
@@ -421,10 +659,15 @@
         "reviewed_by": null,
         "reviewed_at": null
       },
-      "track_ids": ["swift-basics"],
-      "track_order": 8
+      "track_ids": [
+        "debug-lifecycle"
+      ],
+      "track_order": 1,
+      "category": "syntax",
+      "estimated_time_seconds": 60,
+      "related_questions": [],
+      "hint": null
     },
-
     {
       "id": "andpad-2025-d1pm-q10",
       "source_id": "andpad-2025",
@@ -432,25 +675,43 @@
       "number": 10,
       "type": "multiple_choice",
       "difficulty": 2,
-      "topic": ["optional-chaining", "try-optional", "type-flattening"],
+      "topic": [
+        "optional-chaining",
+        "try-optional",
+        "type-flattening"
+      ],
       "swift_version": "6.0",
       "question": {
         "zh_tw": "foo 的型別是什麼？\nlet foo = try? bar?.makeFoo()\n（其中 makeFoo() throws -> Foo?）",
-        "ja": "foo の型は？ let foo = try? bar?.makeFoo()  ※makeFoo() throws -> Foo?"
+        "ja": "foo の型は？ let foo = try? bar?.makeFoo()  ※makeFoo() throws -> Foo?",
+        "en": "What is the type of foo?\nlet foo = try? bar?.makeFoo()\n(where makeFoo() throws -> Foo?)"
       },
       "code_snippet": "// makeFoo() throws -> Foo?\nlet foo = try? bar?.makeFoo()",
       "answer_format": {
         "options": [
-          { "label": "A", "text": "Foo?" },
-          { "label": "B", "text": "Foo??" },
-          { "label": "C", "text": "Foo???" },
-          { "label": "D", "text": "視 bar 是否為 nil 而不同" }
+          {
+            "label": "A",
+            "text": "Foo?"
+          },
+          {
+            "label": "B",
+            "text": "Foo??"
+          },
+          {
+            "label": "C",
+            "text": "Foo???"
+          },
+          {
+            "label": "D",
+            "text": "視 bar 是否為 nil 而不同"
+          }
         ],
         "correct": "A"
       },
       "explanation": {
         "zh_tw": "try? 和 Optional Chaining 都不會讓 Optional 重複巢套。Swift 5 修改了規格：try? 套用在一個 Optional 結果上，不會產生 Optional<Optional<T>>，而是自動壓平為 Optional<T>。所以結果是 Foo? 而非 Foo??。",
-        "ja": "try? と optional chaining は両方ともオプショナルをネストしない。Swift 5 で仕様変更済。"
+        "ja": "try? と optional chaining は両方ともオプショナルをネストしない。Swift 5 で仕様変更済。",
+        "en": "Neither `try?` nor optional chaining nest `Optional` types. In Swift 5, the specification was updated: applying `try?` to an already-optional result does not produce `Optional<Optional<T>>` — it is automatically flattened to `Optional<T>`. The result is `Foo?`, not `Foo??`."
       },
       "reference_url": "https://tech.andpad.co.jp/entry/2025/09/21/095019",
       "curation": {
@@ -461,10 +722,15 @@
         "reviewed_by": null,
         "reviewed_at": null
       },
-      "track_ids": ["debug-lifecycle"],
-      "track_order": 2
+      "track_ids": [
+        "debug-lifecycle"
+      ],
+      "track_order": 2,
+      "category": "type-system",
+      "estimated_time_seconds": 75,
+      "related_questions": [],
+      "hint": null
     },
-
     {
       "id": "andpad-2025-d1pm-q11",
       "source_id": "andpad-2025",
@@ -472,25 +738,44 @@
       "number": 11,
       "type": "multiple_choice",
       "difficulty": 3,
-      "topic": ["rethrows", "throws", "closure", "error-handling"],
+      "topic": [
+        "rethrows",
+        "throws",
+        "closure",
+        "error-handling"
+      ],
       "swift_version": "6.0",
       "question": {
         "zh_tw": "呼叫 rethrows 函式時，呼叫端需要加 throws 嗎？",
-        "ja": "rethrows 関数を使う呼び出し元に throws は必要か？"
+        "ja": "rethrows 関数を使う呼び出し元に throws は必要か？",
+        "en": "When calling a rethrows function, does the call site need throws?"
       },
-      "code_snippet": null,
+      "code_snippet": "func map<T>(_ transform: (Int) throws -> T) rethrows -> [T] {\n    try [1,2,3].map(transform)\n}\n// 傳入 non-throwing 閉包時呼叫端需要 throws 嗎？\nlet result = map { $0 * 2 }",
       "answer_format": {
         "options": [
-          { "label": "A", "text": "總是需要 throws" },
-          { "label": "B", "text": "傳入 non-throwing 閉包時不需要" },
-          { "label": "C", "text": "永遠不需要" },
-          { "label": "D", "text": "編譯錯誤" }
+          {
+            "label": "A",
+            "text": "總是需要 throws"
+          },
+          {
+            "label": "B",
+            "text": "傳入 non-throwing 閉包時不需要"
+          },
+          {
+            "label": "C",
+            "text": "永遠不需要"
+          },
+          {
+            "label": "D",
+            "text": "編譯錯誤"
+          }
         ],
         "correct": "B"
       },
       "explanation": {
         "zh_tw": "rethrows 函式只有在傳入的閉包會拋出錯誤時，才等同有 throws。如果傳入 non-throwing 閉包，呼叫端無需 try 也無需 throws，等同普通函式呼叫。",
-        "ja": "rethrows はクロージャが throwing の場合のみ throws 相当になる。non-throwing を渡せば throws 不要。"
+        "ja": "rethrows はクロージャが throwing の場合のみ throws 相当になる。non-throwing を渡せば throws 不要。",
+        "en": "A `rethrows` function only propagates throws when the closure argument itself throws. When a non-throwing closure is passed, the function is equivalent to a regular function — the call site needs neither `try` nor `throws`."
       },
       "reference_url": "https://tech.andpad.co.jp/entry/2025/09/21/095019",
       "curation": {
@@ -501,10 +786,17 @@
         "reviewed_by": null,
         "reviewed_at": null
       },
-      "track_ids": ["debug-lifecycle"],
-      "track_order": 3
+      "track_ids": [
+        "debug-lifecycle"
+      ],
+      "track_order": 4,
+      "category": "error-handling",
+      "estimated_time_seconds": 60,
+      "related_questions": [
+        "andpad-2025-d1am-q8"
+      ],
+      "hint": null
     },
-
     {
       "id": "andpad-2025-d1pm-q12",
       "source_id": "andpad-2025",
@@ -512,25 +804,43 @@
       "number": 12,
       "type": "multiple_choice",
       "difficulty": 4,
-      "topic": ["access-control", "private", "fileprivate"],
+      "topic": [
+        "access-control",
+        "private",
+        "fileprivate"
+      ],
       "swift_version": "6.0",
       "question": {
         "zh_tw": "private 和 fileprivate 的差別？",
-        "ja": "private と fileprivate の違いは？"
+        "ja": "private と fileprivate の違いは？",
+        "en": "What is the difference between private and fileprivate?"
       },
-      "code_snippet": null,
+      "code_snippet": "class MyClass {\n    private var secret = 42\n    fileprivate var shared = 99\n}\nextension MyClass {\n    func reveal() {\n        // secret 和 shared 哪個可以存取？\n    }\n}",
       "answer_format": {
         "options": [
-          { "label": "A", "text": "兩者相同" },
-          { "label": "B", "text": "private 只限宣告的型別或作用域" },
-          { "label": "C", "text": "fileprivate 可讓整個模組存取" },
-          { "label": "D", "text": "private 可讓整個檔案存取" }
+          {
+            "label": "A",
+            "text": "兩者相同"
+          },
+          {
+            "label": "B",
+            "text": "private 只限宣告的型別或作用域"
+          },
+          {
+            "label": "C",
+            "text": "fileprivate 可讓整個模組存取"
+          },
+          {
+            "label": "D",
+            "text": "private 可讓整個檔案存取"
+          }
         ],
         "correct": "B"
       },
       "explanation": {
         "zh_tw": "private：只有宣告它的型別或作用域（含 nested type）可以存取，就算在同一個檔案的 extension 也不行。fileprivate：同一個檔案中的所有程式碼（包含 extension）皆可存取。C 和 D 是常見的誤解：fileprivate 僅限同一檔案，不及於整個模組；private 也不是檔案層級。",
-        "ja": "private は宣言した型やスコープ内のみ。fileprivate は同一ファイル内なら extension なども含めてアクセス可。"
+        "ja": "private は宣言した型やスコープ内のみ。fileprivate は同一ファイル内なら extension なども含めてアクセス可。",
+        "en": "`private` restricts access to the enclosing declaration and any nested types within it — even an `extension` in the same file cannot access `private` members. `fileprivate` allows access from anywhere within the same source file, including `extension`s. Common misconceptions: `fileprivate` is file-scoped, not module-scoped; `private` is scope-scoped, not file-scoped."
       },
       "reference_url": "https://tech.andpad.co.jp/entry/2025/09/21/095019",
       "curation": {
@@ -541,10 +851,19 @@
         "reviewed_by": null,
         "reviewed_at": null
       },
-      "track_ids": ["debug-lifecycle"],
-      "track_order": 4
+      "track_ids": [
+        "debug-lifecycle"
+      ],
+      "track_order": 5,
+      "category": "access-control",
+      "estimated_time_seconds": 75,
+      "related_questions": [],
+      "hint": {
+        "zh_tw": "extension 在同一個檔案裡，但不在同一個型別宣告裡——這影響了 private 的範圍。",
+        "en": "An extension is in the same file but not the same declaration — this matters for `private` scope.",
+        "ja": "extension は同じファイルにあるが同じ型宣言ではない。private のスコープに影響する。"
+      }
     },
-
     {
       "id": "dena-2024-booth-q1",
       "source_id": "dena-2024",
@@ -552,24 +871,44 @@
       "number": 1,
       "type": "fill_in_the_blank",
       "difficulty": 2,
-      "topic": ["swiftui", "scroll-view", "vstack", "padding", "preview-macro"],
+      "topic": [
+        "swiftui",
+        "scroll-view",
+        "vstack",
+        "padding",
+        "preview-macro"
+      ],
       "swift_version": "5.9",
       "question": {
         "zh_tw": "填入 ScrollView ＋ VStack 的正確 API 名稱（共 4 個空格）",
-        "ja": "ScrollView + VStack の虫食いを埋めよ"
+        "ja": "ScrollView + VStack の虫食いを埋めよ",
+        "en": "Fill in the correct API names for ScrollView + VStack (4 blanks)"
       },
       "code_snippet": "ScrollView(.□□□□□□□□□□□) { // A-3\n  □□□□□□(spacing: 40) {    // A-4\n    Text(\"iOSDC Japan 2024\")\n  }\n  .padding(.□□□□□□□, 64)   // A-1\n}\n#□□□□□□□ { Question01() }  // A-2",
       "answer_format": {
         "blanks": [
-          { "id": "A-1", "answer": "top" },
-          { "id": "A-2", "answer": "Preview" },
-          { "id": "A-3", "answer": "vertical" },
-          { "id": "A-4", "answer": "VStack" }
+          {
+            "id": "A-1",
+            "answer": "top"
+          },
+          {
+            "id": "A-2",
+            "answer": "Preview"
+          },
+          {
+            "id": "A-3",
+            "answer": "vertical"
+          },
+          {
+            "id": "A-4",
+            "answer": "VStack"
+          }
         ]
       },
       "explanation": {
         "zh_tw": "ScrollView 的滾動方向使用 .vertical（可省略，預設就是 vertical）。VStack 垂直排列子視圖，可設定 spacing。.padding(.top, 64) 在頂部加上 64 pt 的留白。#Preview 是 Swift 5.9 引入的 Preview 巨集，用來取代舊的 PreviewProvider。",
-        "ja": "ScrollView の方向 .vertical（省略も可）、VStack のスペーシング、padding の方向指定、Preview マクロ。SwiftUI の基本構造問題。"
+        "ja": "ScrollView の方向 .vertical（省略も可）、VStack のスペーシング、padding の方向指定、Preview マクロ。SwiftUI の基本構造問題。",
+        "en": "`ScrollView` defaults to `.vertical` scrolling (it can be omitted). `VStack` arranges child views vertically with optional `spacing`. `.padding(.top, 64)` adds 64 pt of top padding. `#Preview` is the Preview macro introduced in Swift 5.9, replacing the old `PreviewProvider` pattern."
       },
       "reference_url": "https://engineering.dena.com/blog/2024/09/iosdc2024-crossword/",
       "curation": {
@@ -580,10 +919,17 @@
         "reviewed_by": null,
         "reviewed_at": null
       },
-      "track_ids": ["swiftui-uikit"],
-      "track_order": 1
+      "track_ids": [
+        "swiftui-uikit"
+      ],
+      "track_order": 1,
+      "category": "swiftui",
+      "estimated_time_seconds": 120,
+      "related_questions": [
+        "dena-2024-booth-q2"
+      ],
+      "hint": null
     },
-
     {
       "id": "dena-2024-booth-q2",
       "source_id": "dena-2024",
@@ -591,25 +937,48 @@
       "number": 2,
       "type": "fill_in_the_blank",
       "difficulty": 3,
-      "topic": ["swiftui", "foreground-style", "linear-gradient", "modifier", "frame"],
+      "topic": [
+        "swiftui",
+        "foreground-style",
+        "linear-gradient",
+        "modifier",
+        "frame"
+      ],
       "swift_version": "5.9",
       "question": {
         "zh_tw": "用 LinearGradient 製作六色彩虹效果，填入 5 個空格",
-        "ja": "LinearGradient で虹色を作る虫食い"
+        "ja": "LinearGradient で虹色を作る虫食い",
+        "en": "Create a six-color rainbow effect using LinearGradient (fill in 5 blanks)"
       },
       "code_snippet": ".□□□□□□□□□□Style(          // A-1\n  LinearGradient(stops: stops,\n    startPoint: .top,\n    endPoint: .□□□□□□))      // A-4\n.frame(width: 320, □□□□□□: 320) // A-2\nvar body: some □□□□ {}         // A-5\n.font(.system(size: 40, weight: .□□□□)) // A-3",
       "answer_format": {
         "blanks": [
-          { "id": "A-1", "answer": "foreground" },
-          { "id": "A-2", "answer": "height" },
-          { "id": "A-3", "answer": "bold" },
-          { "id": "A-4", "answer": "bottom" },
-          { "id": "A-5", "answer": "View" }
+          {
+            "id": "A-1",
+            "answer": "foreground"
+          },
+          {
+            "id": "A-2",
+            "answer": "height"
+          },
+          {
+            "id": "A-3",
+            "answer": "bold"
+          },
+          {
+            "id": "A-4",
+            "answer": "bottom"
+          },
+          {
+            "id": "A-5",
+            "answer": "View"
+          }
         ]
       },
       "explanation": {
         "zh_tw": ".foregroundStyle 將 LinearGradient 套用在前景色上。frame 需要同時指定 width 和 height。some View 是協定遵循的不透明回傳型別（opaque return type）。.font(.system(size:weight:)) 中的 weight 用 .bold。將 Gradient.Stop 同座標放兩個可製作縞狀效果，呈現仿 Apple Logo 六色彩虹。",
-        "ja": ".foregroundStyle で LinearGradient を適用。frame に width/height を指定。some View プロトコル定義。Apple ロゴ 6 色グラデーション（Gradient.Stop を同座標で2つ並べることで縞模様）。"
+        "ja": ".foregroundStyle で LinearGradient を適用。frame に width/height を指定。some View プロトコル定義。Apple ロゴ 6 色グラデーション（Gradient.Stop を同座標で2つ並べることで縞模様）。",
+        "en": "`.foregroundStyle` applies a `LinearGradient` to the foreground color. `frame` requires both `width` and `height`. `some View` is the opaque return type for protocol conformance. `.font(.system(size:weight:))` uses `.bold` for weight. Placing two `Gradient.Stop` values at the same position creates a hard-color-stop stripe effect, producing the Apple Logo six-color rainbow."
       },
       "reference_url": "https://engineering.dena.com/blog/2024/09/iosdc2024-crossword/",
       "curation": {
@@ -620,31 +989,63 @@
         "reviewed_by": null,
         "reviewed_at": null
       },
-      "track_ids": ["swiftui-uikit"],
-      "track_order": 2
+      "track_ids": [
+        "swiftui-uikit"
+      ],
+      "track_order": 2,
+      "category": "swiftui",
+      "estimated_time_seconds": 120,
+      "related_questions": [
+        "dena-2024-booth-q1"
+      ],
+      "hint": null
     },
-
     {
       "id": "concurrency-2024-talk-q1",
       "source_id": "concurrency-2024",
       "session": "talk",
       "number": 1,
-      "type": "code_output",
+      "type": "multiple_choice",
       "difficulty": 3,
-      "topic": ["main-actor", "task", "task-detached", "actor-context", "concurrency"],
+      "topic": [
+        "main-actor",
+        "task",
+        "task-detached",
+        "actor-context",
+        "concurrency"
+      ],
       "swift_version": "6.0",
       "question": {
-        "zh_tw": "Task 和 Task.detached 各在哪個執行緒（Actor）上執行？",
-        "ja": "Task vs Detached Task — それぞれ MainActor で実行される？"
+        "zh_tw": "@MainActor 函式內，Task 和 Task.detached 哪一個描述正確？",
+        "ja": "@MainActor 関数内の Task と Task.detached について正しい説明はどれか？",
+        "en": "Inside a @MainActor function, which statement about Task and Task.detached is correct?"
       },
       "code_snippet": "@MainActor\nfunc foo() async {\n    Task {\n        // 在 MainActor 執行？\n    }\n    Task.detached {\n        // 在 MainActor 執行？\n    }\n}",
       "answer_format": {
-        "expected_output": "Task: MainActor（是）。Task.detached: 非 MainActor（否，任意執行緒）。",
-        "compiles": true
+        "options": [
+          {
+            "label": "A",
+            "text": "Task 和 Task.detached 都在 MainActor 上執行"
+          },
+          {
+            "label": "B",
+            "text": "Task 繼承 MainActor context，Task.detached 不繼承"
+          },
+          {
+            "label": "C",
+            "text": "Task.detached 繼承 MainActor context，Task 不繼承"
+          },
+          {
+            "label": "D",
+            "text": "Task 和 Task.detached 都不在 MainActor 上執行"
+          }
+        ],
+        "correct": "B"
       },
       "explanation": {
         "zh_tw": "Task 繼承呼叫端的 actor context，因此在 @MainActor 函式內建立的 Task 也會在 MainActor 上執行。Task.detached 不繼承任何 actor context，會在任意執行緒上執行，不保證是 MainActor。這是兩者最關鍵的差異。",
-        "ja": "Task は呼び出し元の actor context を引き継ぐ（MainActor）。Task.detached は引き継がない（任意のスレッド）。"
+        "ja": "Task は呼び出し元の actor context を引き継ぐ（MainActor）。Task.detached は引き継がない（任意のスレッド）。",
+        "en": "`Task` inherits the actor context of its creating scope — a `Task` created inside a `@MainActor` function runs on the `MainActor`. `Task.detached` does not inherit any actor context and runs on an arbitrary thread, with no guarantee of being on the `MainActor`. This is the most critical difference between the two."
       },
       "reference_url": "https://speakerdeck.com/tokizuoh/swift-cocurrency-quiz",
       "curation": {
@@ -655,31 +1056,64 @@
         "reviewed_by": null,
         "reviewed_at": null
       },
-      "track_ids": ["swift-concurrency"],
-      "track_order": 1
+      "track_ids": [
+        "swift-concurrency"
+      ],
+      "track_order": 1,
+      "category": "concurrency",
+      "estimated_time_seconds": 75,
+      "related_questions": [
+        "concurrency-2024-talk-q2",
+        "concurrency-2024-talk-q3"
+      ],
+      "hint": null
     },
-
     {
       "id": "concurrency-2024-talk-q2",
       "source_id": "concurrency-2024",
       "session": "talk",
       "number": 2,
-      "type": "code_output",
+      "type": "multiple_choice",
       "difficulty": 3,
-      "topic": ["main-actor", "global-actor", "inheritance", "class", "concurrency"],
+      "topic": [
+        "main-actor",
+        "global-actor",
+        "inheritance",
+        "class",
+        "concurrency"
+      ],
       "swift_version": "6.0",
       "question": {
-        "zh_tw": "Foo 和 Baz 的 bar() 各是否為 MainActor isolated？",
-        "ja": "Global Actor の継承 — MainActor isolated？"
+        "zh_tw": "子類別 Baz 繼承 @MainActor class Foo 並 override bar()，bar() 是否仍為 MainActor isolated？",
+        "ja": "@MainActor class Foo を継承した Baz が bar() を override した場合、MainActor isolated のままか？",
+        "en": "Baz inherits from @MainActor class Foo and overrides bar(). Is bar() still MainActor isolated in Baz?"
       },
       "code_snippet": "@MainActor\nclass Foo {\n    func bar() {\n        // MainActor isolated？\n    }\n}\n\nclass Baz: Foo {\n    override func bar() {\n        // MainActor isolated？\n    }\n}",
       "answer_format": {
-        "expected_output": "Foo.bar(): MainActor isolated（是）。Baz.bar(): MainActor isolated（是，繼承自 Foo）。",
-        "compiles": true
+        "options": [
+          {
+            "label": "A",
+            "text": "是，override 不移除 MainActor isolation"
+          },
+          {
+            "label": "B",
+            "text": "否，override 會自動移除 actor isolation"
+          },
+          {
+            "label": "C",
+            "text": "是，但需要再次標記 @MainActor 才有效"
+          },
+          {
+            "label": "D",
+            "text": "視 Baz 是否也標記 @MainActor 而定"
+          }
+        ],
+        "correct": "A"
       },
       "explanation": {
         "zh_tw": "class 加上 @MainActor 後，其所有成員（包含函式和屬性）都是 MainActor isolated。子類別 Baz 繼承 Foo，override 的 bar() 也維持 MainActor isolated，不會因為 override 而失去 actor 保護。若要在子類別中移除 MainActor，需要明確標記 nonisolated。",
-        "ja": "クラスに @MainActor がついていると、そのメンバーも MainActor isolated になる。サブクラスも基本的に引き継ぐ（override しても同じ actor）。"
+        "ja": "クラスに @MainActor がついていると、そのメンバーも MainActor isolated になる。サブクラスも基本的に引き継ぐ（override しても同じ actor）。",
+        "en": "Marking a `class` with `@MainActor` makes all of its members (functions and properties) `MainActor` isolated. Subclass `Baz` inherits from `Foo`, so the overridden `bar()` also remains `MainActor` isolated — `override` does not remove actor isolation. To opt out in a subclass, you must explicitly mark the method `nonisolated`."
       },
       "reference_url": "https://speakerdeck.com/tokizuoh/swift-cocurrency-quiz",
       "curation": {
@@ -690,31 +1124,64 @@
         "reviewed_by": null,
         "reviewed_at": null
       },
-      "track_ids": ["swift-concurrency"],
-      "track_order": 2
+      "track_ids": [
+        "swift-concurrency"
+      ],
+      "track_order": 2,
+      "category": "concurrency",
+      "estimated_time_seconds": 75,
+      "related_questions": [
+        "concurrency-2024-talk-q1",
+        "concurrency-2024-talk-q3"
+      ],
+      "hint": null
     },
-
     {
       "id": "concurrency-2024-talk-q3",
       "source_id": "concurrency-2024",
       "session": "talk",
       "number": 3,
-      "type": "code_output",
+      "type": "multiple_choice",
       "difficulty": 4,
-      "topic": ["main-actor", "suspension-point", "await", "concurrency", "actor-context"],
+      "topic": [
+        "main-actor",
+        "suspension-point",
+        "await",
+        "concurrency",
+        "actor-context"
+      ],
       "swift_version": "6.0",
       "question": {
-        "zh_tw": "①②③ 各在哪個執行緒（Actor）上執行？",
-        "ja": "Suspension Point — ①②③ それぞれ何で実行される？"
+        "zh_tw": "@MainActor async 函式中，await 之後的程式碼（③）在哪個 actor 上執行？",
+        "ja": "@MainActor async 関数内で、await の後のコード（③）はどの actor で実行されるか？",
+        "en": "In a @MainActor async function, on which actor does the code after await (③) execute?"
       },
       "code_snippet": "@MainActor\nfunc update() async {\n    heavyWork()       // ①\n    await asyncTask() // ②\n    update2()         // ③\n}",
       "answer_format": {
-        "expected_output": "① MainActor。② await 期間暫停，asyncTask() 本身可能在其他執行緒，但恢復點由 asyncTask 的 actor 決定。③ MainActor（await 後回到 MainActor）。",
-        "compiles": true
+        "options": [
+          {
+            "label": "A",
+            "text": "任意執行緒（不保證回到 MainActor）"
+          },
+          {
+            "label": "B",
+            "text": "MainActor（await 後自動回到原本的 actor）"
+          },
+          {
+            "label": "C",
+            "text": "asyncTask 所在的 actor"
+          },
+          {
+            "label": "D",
+            "text": "取決於 asyncTask 的回傳值型別"
+          }
+        ],
+        "correct": "B"
       },
       "explanation": {
         "zh_tw": "① heavyWork() 在 MainActor 上同步執行。② await asyncTask() 讓函式在此點暫停（suspension point），asyncTask 本身在哪個 actor 執行取決於其定義。③ await 結束後，控制流回到原本的 @MainActor 函式，update2() 在 MainActor 上執行。重點：await 後的程式碼也受 MainActor 保護，不會跑到其他執行緒。",
-        "ja": "①③ は MainActor（await 前後は MainActor に戻る）。② は await でサスペンドするが再開時も MainActor に戻る。"
+        "ja": "①③ は MainActor（await 前後は MainActor に戻る）。② は await でサスペンドするが再開時も MainActor に戻る。",
+        "en": "① `heavyWork()` executes synchronously on the `MainActor`. ② `await asyncTask()` suspends the function at this suspension point; the actor context during `asyncTask`'s execution depends on its own definition. ③ After `await` returns, control flow resumes in the original `@MainActor` function, so `update2()` executes on the `MainActor`. Key point: code after `await` is still protected by `MainActor` — it does not run on an arbitrary thread."
       },
       "reference_url": "https://speakerdeck.com/tokizuoh/swift-cocurrency-quiz",
       "curation": {
@@ -725,9 +1192,21 @@
         "reviewed_by": null,
         "reviewed_at": null
       },
-      "track_ids": ["swift-concurrency"],
-      "track_order": 3
+      "track_ids": [
+        "swift-concurrency"
+      ],
+      "track_order": 3,
+      "category": "concurrency",
+      "estimated_time_seconds": 90,
+      "related_questions": [
+        "concurrency-2024-talk-q1",
+        "concurrency-2024-talk-q2"
+      ],
+      "hint": {
+        "zh_tw": "@MainActor 函式中，await 前後的程式碼都屬於同一個 actor 的管轄範圍。",
+        "en": "In a @MainActor function, code before and after await is within the same actor's scope.",
+        "ja": "@MainActor 関数では await の前後どちらも同じ actor のスコープ内にある。"
+      }
     }
-
   ]
 }
