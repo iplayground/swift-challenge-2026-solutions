@@ -40,7 +40,7 @@ async function init() {
 function renderStart() {
   clearTimer();
   app.innerHTML = `
-    <section class="stage start-card liquid-glass">
+    <section class="stage start-card">
       <div>
         <h1 class="start-title">iPlayground 2026 Quiz</h1>
         <p class="start-copy">每輪隨機 ${TOTAL_QUESTIONS} 題，每題 ${durationSeconds} 秒。倒數結束後會自動進入下一題，最後一次公布答案與解析。</p>
@@ -75,17 +75,22 @@ function renderQuestion() {
   app.innerHTML = `
     <section class="stage quiz-stage">
       <header class="quiz-header">
-        <div class="timer-block timer-card liquid-glass">
+        <div class="timer-block timer-card">
           <div class="timer-label">倒數計時</div>
-          <div class="timer-value" data-timer>${formatSeconds(remainingSeconds)}</div>
+          <div class="timer-value" data-timer>
+            <div class="flip-digit" data-digit="m1"></div>
+            <div class="flip-digit" data-digit="m2"></div>
+            <span class="flip-colon">:</span>
+            <div class="flip-digit" data-digit="s1"></div>
+            <div class="flip-digit" data-digit="s2"></div>
+          </div>
         </div>
-        <div class="question-count progress-pill liquid-glass"><span></span>第 ${currentIndex + 1} 題 / 共 ${TOTAL_QUESTIONS} 題</div>
+        <div class="question-count progress-pill"><span></span>第 ${currentIndex + 1} 題 / 共 ${TOTAL_QUESTIONS} 題</div>
       </header>
 
-      <section class="question-card liquid-glass">
+      <section class="question-card">
         <div class="eyebrow">SWIFT QUIZ</div>
         <h1 class="question-title">${renderPlainText(content.title)}</h1>
-        ${content.signature ? `<div class="function-signature">${escapeHtml(content.signature)}</div>` : ""}
         ${content.codeBlocks.map(renderCodeBlock).join("")}
       </section>
 
@@ -111,13 +116,40 @@ function tick() {
 }
 
 function updateTimerDisplay() {
-  const timer = app.querySelector("[data-timer]");
-  if (timer) {
-    timer.textContent = formatSeconds(remainingSeconds);
-    timer.classList.toggle("is-hot", remainingSeconds <= 10);
-    timer.classList.toggle("is-faster", remainingSeconds <= 5);
-    timer.classList.toggle("is-fastest", remainingSeconds <= 2);
-  }
+  const timerEl = app.querySelector("[data-timer]");
+  if (!timerEl) return;
+
+  const t = formatSeconds(remainingSeconds);
+  const digits = [t[0], t[1], t[3], t[4]];
+  const animatable = new Set(["m2", "s2"]);
+  ["m1", "m2", "s1", "s2"].forEach((key, i) => {
+    const el = timerEl.querySelector(`[data-digit="${key}"]`);
+    if (!el) return;
+    const next = digits[i];
+    const prev = el.dataset.current;
+    if (prev === undefined) {
+      setFlipDigit(el, next);
+    } else if (next !== prev) {
+      if (animatable.has(key)) {
+        animateFlipDigit(el, prev, next);
+      } else {
+        setFlipDigit(el, next);
+      }
+    }
+    el.dataset.current = next;
+  });
+
+  timerEl.classList.toggle("is-hot", remainingSeconds <= 10);
+  timerEl.classList.toggle("is-faster", remainingSeconds <= 5);
+  timerEl.classList.toggle("is-fastest", remainingSeconds <= 2);
+}
+
+function setFlipDigit(el, val) {
+  el.innerHTML = `<span>${val}</span>`;
+}
+
+function animateFlipDigit(el, prev, next) {
+  el.innerHTML = `<span class="digit-out">${prev}</span><span class="digit-in">${next}</span>`;
 }
 
 function goNext() {
@@ -153,7 +185,7 @@ function renderChoice(choice, index) {
   const label = OPTION_LABELS[index] || "";
   const color = ["blue", "green", "yellow", "pink"][index] || "blue";
   return `
-    <button class="choice-tile answer ${color} liquid-glass" type="button" data-choice="${escapeHtml(choice)}">
+    <button class="choice-tile answer ${color}" type="button" data-choice="${escapeHtml(choice)}">
       <div class="choice-label badge">${label}</div>
       <div class="choice-text">${escapeHtml(choice)}</div>
       <div class="choice-state" aria-hidden="true"></div>
@@ -249,24 +281,27 @@ function handleChoiceClick(button, question) {
   const correctAnswer = String(question.answer || "");
   const isCorrect = selectedAnswer === correctAnswer;
 
+  const svgCorrect = `<svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="27" cy="27" r="17" stroke="#1a6e3c" stroke-width="4.5"/></svg>`;
+  const svgWrong   = `<svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="14" y1="14" x2="40" y2="40" stroke="#a02030" stroke-width="4.5" stroke-linecap="round"/><line x1="40" y1="14" x2="14" y2="40" stroke="#a02030" stroke-width="4.5" stroke-linecap="round"/></svg>`;
+
   buttons.forEach((item) => {
     item.classList.remove("correct", "wrong");
-    item.querySelector(".choice-state").textContent = "";
+    item.querySelector(".choice-state").innerHTML = "";
   });
 
   if (isCorrect) {
     button.classList.add("correct");
-    button.querySelector(".choice-state").textContent = "正確";
+    button.querySelector(".choice-state").innerHTML = svgCorrect;
     showToast("答對了！這就是 Swift 正確語法。");
     return;
   }
 
   button.classList.add("wrong");
-  button.querySelector(".choice-state").textContent = "錯誤";
+  button.querySelector(".choice-state").innerHTML = svgWrong;
   buttons.forEach((item) => {
     if ((item.dataset.choice || "") === correctAnswer) {
       item.classList.add("correct");
-      item.querySelector(".choice-state").textContent = "正確";
+      item.querySelector(".choice-state").innerHTML = svgCorrect;
     }
   });
   showToast(`再想一下：正確答案是 ${correctAnswer}`);
@@ -316,7 +351,7 @@ function parseQuestionContent(text) {
     .find((line) => line.length > 0 && line.length <= 80) || "";
 
   return {
-    title: parts[0].trim(),
+    title: parts[0].trim().split("\n")[0].trim(),
     signature,
     codeBlocks,
   };
@@ -395,6 +430,15 @@ function refreshLiquidGlass() {
 
     const targets = app.querySelectorAll(".liquid-glass");
     if (targets.length === 0) {
+      const renderer = window.__liquidGLRenderer__;
+      if (renderer) {
+        renderer.lenses = [];
+        renderer._pendingReveal = [];
+        if (renderer.canvas && renderer.canvas.parentNode) {
+          renderer.canvas.parentNode.removeChild(renderer.canvas);
+        }
+        window.__liquidGLRenderer__ = null;
+      }
       return;
     }
 

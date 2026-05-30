@@ -155,7 +155,11 @@
     "index": 14,
     "question": "用 LinearGradient 製作六色彩虹效果，填入 5 個空格\n\n```swift\n.□□□□□□□□□□Style(          // A-1\n  LinearGradient(stops: stops,\n    startPoint: .top,\n    endPoint: .□□□□□□))      // A-4\n.frame(width: 320, □□□□□□: 320) // A-2\nvar body: some □□□□ {}         // A-5\n.font(.system(size: 40, weight: .□□□□)) // A-3\n```",
     "answer": "A-1: foreground, A-2: height, A-3: bold, A-4: bottom, A-5: View",
-    "choices": [],
+    "choices": [
+      "A-1: foreground, A-2: height, A-3: semibold, A-4: bottom, A-5: View",
+      "A-1: background, A-2: height, A-3: bold, A-4: bottom, A-5: View",
+      "A-1: foreground, A-2: height, A-3: bold, A-4: trailing, A-5: View"
+    ],
     "reason": ".foregroundStyle 將 LinearGradient 套用在前景色上。frame 需要同時指定 width 和 height。some View 是協定遵循的不透明回傳型別（opaque return type）。.font(.system(size:weight:)) 中的 weight 用 .bold。將 Gradient.Stop 同座標放兩個可製作縞狀效果，呈現仿 Apple Logo 六色彩虹。",
     "author": "iPlayground 2026 SwiftUI Quiz"
   },
