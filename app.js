@@ -37,12 +37,20 @@ async function init() {
   }
 }
 
+function letterPullUp(text, delayMs = 50) {
+  return [...text].map((char, i) =>
+    char === " "
+      ? `<span style="display:inline-block;width:0.3em"></span>`
+      : `<span class="letter-up" style="animation-delay:${i * delayMs}ms">${escapeHtml(char)}</span>`
+  ).join("");
+}
+
 function renderStart() {
   clearTimer();
   app.innerHTML = `
     <section class="stage start-card">
       <div>
-        <h1 class="start-title">iPlayground 2026 Quiz</h1>
+        <h1 class="start-title">${letterPullUp("iPlayground 2026 Quiz", 50)}</h1>
         <p class="start-copy">每輪隨機 ${TOTAL_QUESTIONS} 題，每題 ${durationSeconds} 秒。倒數結束後會自動進入下一題，最後一次公布答案與解析。</p>
         <button class="primary-action" type="button" data-action="start">開始挑戰</button>
       </div>
@@ -90,7 +98,7 @@ function renderQuestion() {
 
       <section class="question-card">
         <div class="eyebrow">SWIFT QUIZ</div>
-        <h1 class="question-title">${renderPlainText(content.title)}</h1>
+        <h1 class="question-title">${letterPullUp(content.title, 30)}</h1>
         ${content.codeBlocks.map(renderCodeBlock).join("")}
       </section>
 
