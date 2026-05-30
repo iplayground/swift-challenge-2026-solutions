@@ -176,7 +176,7 @@ function renderResults() {
   app.innerHTML = `
     <section class="result-shell">
       <header class="result-header">
-        <h1 class="result-title">答案與解答</h1>
+        <h1 class="result-title">答案與詳解</h1>
         <button class="secondary-action" type="button" data-action="restart">再玩一次</button>
       </header>
       <section class="result-list">
