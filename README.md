@@ -1,6 +1,6 @@
-# Swift Challenge Quiz
+# iPlayground 2026 Quiz
 
-A static web quiz game for Swift challenge questions. It loads `iplayground2026_quiz_data.json`, randomly selects 5 questions, shows each question for 30 seconds, then displays the answers and explanations at the end.
+A static web quiz game for iPlayground 2026 Swift challenge questions. It loads `iplayground2026_quiz_data.json`, randomly selects 5 questions, shows each question for 30 seconds, then displays the answers and explanations at the end.
 
 ## Play
 
