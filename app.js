@@ -50,7 +50,7 @@ function renderStart() {
   app.innerHTML = `
     <section class="stage start-card">
       <div>
-        <h1 class="start-title">${letterPullUp("iPlayground 2026 Quiz", 50)}</h1>
+        <h1 class="start-title">${letterPullUp("iPlayground 2026 Quiz", 50)}<span class="title-star"><svg viewBox="0 0 100 80" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g class="spark spark-1"><path transform="translate(24,26)" d="M0,-16 C1.6,-3.2 3.2,-1.6 16,0 C3.2,1.6 1.6,3.2 0,16 C-1.6,3.2 -3.2,1.6 -16,0 C-3.2,-1.6 -1.6,-3.2 0,-16Z"/></g><g class="spark spark-2"><path transform="translate(40,54)" d="M0,-8 C0.8,-1.6 1.6,-0.8 8,0 C1.6,0.8 0.8,1.6 0,8 C-0.8,1.6 -1.6,0.8 -8,0 C-1.6,-0.8 -0.8,-1.6 0,-8Z"/></g><g class="spark spark-3"><path transform="translate(72,40)" d="M0,-24 C2.4,-4.8 4.8,-2.4 24,0 C4.8,2.4 2.4,4.8 0,24 C-2.4,4.8 -4.8,2.4 -24,0 C-4.8,-2.4 -2.4,-4.8 0,-24Z"/></g></svg></span></h1>
         <p class="start-copy">每輪隨機 ${TOTAL_QUESTIONS} 題，每題 ${durationSeconds} 秒。倒數結束後會自動進入下一題，最後一次公布答案與解析。</p>
         <button class="primary-action" type="button" data-action="start">開始挑戰</button>
       </div>

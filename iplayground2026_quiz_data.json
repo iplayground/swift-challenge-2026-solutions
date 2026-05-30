@@ -147,7 +147,11 @@
     "index": 13,
     "question": "填入 ScrollView ＋ VStack 的正確 API 名稱（共 4 個空格）\n\n```swift\nScrollView(.□□□□□□□□□□□) { // A-3\n  □□□□□□(spacing: 40) {    // A-4\n    Text(\"iPlayground 2026\")\n  }\n  .padding(.□□□□□□□, 64)   // A-1\n}\n#□□□□□□□ { Question01() }  // A-2\n```",
     "answer": "A-1: top, A-2: Preview, A-3: vertical, A-4: VStack",
-    "choices": [],
+    "choices": [
+      "A-1: top, A-2: PreviewProvider, A-3: vertical, A-4: VStack",
+      "A-1: top, A-2: Preview, A-3: horizontal, A-4: VStack",
+      "A-1: all, A-2: Preview, A-3: vertical, A-4: LazyVStack"
+    ],
     "reason": "ScrollView 的滾動方向使用 .vertical（可省略，預設就是 vertical）。VStack 垂直排列子視圖，可設定 spacing。.padding(.top, 64) 在頂部加上 64 pt 的留白。#Preview 是 Swift 5.9 引入的 Preview 巨集，用來取代舊的 PreviewProvider。",
     "author": "iPlayground 2026 SwiftUI Quiz"
   },
