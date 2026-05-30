@@ -56,7 +56,7 @@ Questions live in `iplayground2026_quiz_data.json`. Each entry has:
 
 ### Start
 
-![Start screen](docs/screenshots/start.png)
+![Start screen](docs/screenshots/starting-page-revise.png)
 
 ### Question
 
