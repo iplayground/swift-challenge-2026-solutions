@@ -9,8 +9,14 @@
   <body>
     <main id="app" class="app-shell" aria-live="polite"></main>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <button id="music-btn" class="music-btn is-muted" type="button" aria-label="切換音樂">
+      <svg class="icon-on" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6Z"/></svg>
+      <svg class="icon-off" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.27 3 3 4.27l9 9V17a4 4 0 1 0 2 3.46V15.27l6.73 6.73L22 20.73 4.27 3ZM14 7h4V3h-6v5.18L14 10.4V7Z"/></svg>
+    </button>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.9.11/Tone.js"></script>
     <script src="vendor/liquidGL/html2canvas.min.js"></script>
     <script src="vendor/liquidGL/liquidGL.js"></script>
+    <script src="music.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

@@ -13,8 +13,138 @@ let roundQuestions = [];
 let currentIndex = 0;
 let remainingSeconds = durationSeconds;
 let timerId = null;
+let timerDeadlineMs = 0;
 let toastId = null;
 let liquidGlassId = null;
+
+let musicOn = false;
+const musicBtn = document.getElementById("music-btn");
+
+// ── 背景音樂（由 music.js 的 Web Audio loop 驅動）──────────────────────────
+
+async function initMusic() { /* no-op: Strudel initialises lazily on first toggle */ }
+
+function primeMusic() {
+  if (!window.quizMusicPrime) return;
+  window.quizMusicPrime().then((playing) => {
+    musicOn = Boolean(playing);
+    updateMusicBtn();
+  }).catch((error) => {
+    console.error("[Music] prime error:", error);
+  });
+}
+
+async function toggleMusic() {
+  try {
+    if (window.strudelToggle) {
+      musicOn = await window.strudelToggle();
+    }
+  } catch (error) {
+    console.error("[Music] toggle error:", error);
+    musicOn = false;
+  }
+  updateMusicBtn();
+}
+
+async function startMusic() {
+  if (musicOn || !window.strudelStart) return;
+
+  try {
+    musicOn = await window.strudelStart();
+    updateMusicBtn();
+    if (!musicOn) {
+      showToast("瀏覽器暫時阻擋音訊，請再點右下角音樂按鈕一次。");
+    }
+  } catch (error) {
+    console.error("[Music] start error:", error);
+    musicOn = false;
+    updateMusicBtn();
+    showToast("音樂啟動失敗，請確認瀏覽器音訊權限。");
+  }
+}
+
+function updateMusicBtn() {
+  if (!musicBtn) return;
+  musicBtn.classList.toggle("is-muted", !musicOn);
+  musicBtn.setAttribute("aria-label", musicOn ? "靜音" : "播放音樂");
+}
+
+if (musicBtn) {
+  musicBtn.addEventListener("click", toggleMusic);
+}
+
+// ── Sound effects ──────────────────────────────────────────────────────────
+
+let sfxReady = false;
+
+async function ensureSfx() {
+  if (sfxReady) return;
+  await Tone.start();
+  sfxReady = true;
+}
+
+function oneShot(fn) {
+  ensureSfx().then(fn);
+}
+
+function sfxNav() {
+  oneShot(() => {
+    const s = new Tone.Synth({
+      oscillator: { type: "square" },
+      envelope: { attack: 0.001, decay: 0.06, sustain: 0, release: 0.02 },
+      volume: -22,
+    }).toDestination();
+    s.triggerAttackRelease("D5", "32n");
+    setTimeout(() => s.dispose(), 400);
+  });
+}
+
+function sfxSelect() {
+  oneShot(() => {
+    const s = new Tone.MetalSynth({
+      frequency: 600,
+      envelope: { attack: 0.001, decay: 0.06, release: 0.04 },
+      harmonicity: 5.1,
+      modulationIndex: 16,
+      resonance: 4000,
+      octaves: 0.5,
+      volume: -28,
+    }).toDestination();
+    s.triggerAttackRelease("16n");
+    setTimeout(() => s.dispose(), 500);
+  });
+}
+
+function sfxCorrect() {
+  oneShot(() => {
+    const reverb = new Tone.Reverb({ decay: 1.2, wet: 0.4 }).toDestination();
+    const s = new Tone.Synth({
+      oscillator: { type: "triangle" },
+      envelope: { attack: 0.005, decay: 0.12, sustain: 0.3, release: 0.4 },
+      volume: -10,
+    }).connect(reverb);
+    const t = Tone.now();
+    s.triggerAttackRelease("D5", "16n", t);
+    s.triggerAttackRelease("F5", "16n", t + 0.09);
+    s.triggerAttackRelease("A5", "8n",  t + 0.18);
+    setTimeout(() => { s.dispose(); reverb.dispose(); }, 2000);
+  });
+}
+
+function sfxWrong() {
+  oneShot(() => {
+    const dist = new Tone.Distortion(0.5).toDestination();
+    const s = new Tone.Synth({
+      oscillator: { type: "sawtooth" },
+      envelope: { attack: 0.001, decay: 0.18, sustain: 0, release: 0.08 },
+      volume: -16,
+    }).connect(dist);
+    const t = Tone.now();
+    s.triggerAttackRelease("Bb2", "8n", t);
+    s.triggerAttackRelease("Ab2", "8n", t + 0.1);
+    setTimeout(() => { s.dispose(); dist.dispose(); }, 1000);
+  });
+}
 
 init();
 
@@ -52,12 +182,22 @@ function renderStart() {
       <div>
         <h1 class="start-title">${letterPullUp("iPlayground 2026 Quiz", 50)}<span class="title-star"><svg viewBox="0 0 100 80" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g class="spark spark-1"><path transform="translate(24,26)" d="M0,-16 C1.6,-3.2 3.2,-1.6 16,0 C3.2,1.6 1.6,3.2 0,16 C-1.6,3.2 -3.2,1.6 -16,0 C-3.2,-1.6 -1.6,-3.2 0,-16Z"/></g><g class="spark spark-2"><path transform="translate(40,54)" d="M0,-8 C0.8,-1.6 1.6,-0.8 8,0 C1.6,0.8 0.8,1.6 0,8 C-0.8,1.6 -1.6,0.8 -8,0 C-1.6,-0.8 -0.8,-1.6 0,-8Z"/></g><g class="spark spark-3"><path transform="translate(72,40)" d="M0,-24 C2.4,-4.8 4.8,-2.4 24,0 C4.8,2.4 2.4,4.8 0,24 C-2.4,4.8 -4.8,2.4 -24,0 C-4.8,-2.4 -2.4,-4.8 0,-24Z"/></g></svg></span></h1>
         <p class="start-copy">每輪隨機 ${TOTAL_QUESTIONS} 題，每題 ${durationSeconds} 秒。倒數結束後會自動進入下一題，最後一次公布答案與解析。</p>
-        <button class="primary-action" type="button" data-action="start">開始挑戰</button>
+        <div class="sparkle-button">
+          <button class="nav-btn" type="button" data-action="start">
+            <span class="nav-spark"></span>
+            <span class="nav-backdrop"></span>
+            <span class="nav-text">開始挑戰</span>
+          </button>
+          <div class="nav-particle-pen">${Array.from({ length: 15 }, () => `<svg class="nav-particle" viewBox="0 0 15 15" aria-hidden="true"><path d="M7.5 0L9.5 5.5L15 7.5L9.5 9.5L7.5 15L5.5 9.5L0 7.5L5.5 5.5Z"/></svg>`).join("")}</div>
+        </div>
       </div>
     </section>
   `;
 
-  app.querySelector("[data-action='start']").addEventListener("click", startRound);
+  const startBtn = app.querySelector("[data-action='start']");
+  startBtn.addEventListener("pointerdown", primeMusic);
+  startBtn.addEventListener("click", startRound);
+  initNavParticles();
   refreshLiquidGlass();
 }
 
@@ -67,13 +207,47 @@ function startRound() {
     displayChoices: buildDisplayChoices(question),
   }));
   currentIndex = 0;
+  startMusic();
   renderQuestion();
+}
+
+function renderNavBtn(text, action, disabled = false) {
+  const particles = Array.from({ length: 15 }, () =>
+    `<svg class="nav-particle" viewBox="0 0 15 15" aria-hidden="true"><path d="M7.5 0L9.5 5.5L15 7.5L9.5 9.5L7.5 15L5.5 9.5L0 7.5L5.5 5.5Z"/></svg>`
+  ).join("");
+  return `
+    <div class="sparkle-button">
+      <button class="nav-btn" type="button" data-action="${action}"${disabled ? " disabled" : ""}>
+        <span class="nav-spark"></span>
+        <span class="nav-backdrop"></span>
+        <span class="nav-text">${text}</span>
+      </button>
+      <div class="nav-particle-pen">${particles}</div>
+    </div>
+  `;
+}
+
+function initNavParticles() {
+  const rand = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+  app.querySelectorAll(".nav-particle").forEach((p) => {
+    p.style.cssText = [
+      `--x: ${rand(20, 80)}`,
+      `--y: ${rand(20, 80)}`,
+      `--duration: ${rand(6, 20)}`,
+      `--delay: ${rand(1, 10)}`,
+      `--alpha: ${rand(40, 90) / 100}`,
+      `--origin-x: ${Math.random() > 0.5 ? rand(300, 800) * -1 : rand(300, 800)}%`,
+      `--origin-y: ${Math.random() > 0.5 ? rand(300, 800) * -1 : rand(300, 800)}%`,
+      `--size: ${rand(40, 90) / 100}`,
+    ].join(";");
+  });
 }
 
 function renderQuestion() {
   clearTimer();
   hideToast();
   remainingSeconds = durationSeconds;
+  timerDeadlineMs = Date.now() + durationSeconds * 1000;
   const question = roundQuestions[currentIndex];
   const content = parseQuestionContent(question.question);
   const choicesHtml = question.displayChoices.length > 0
@@ -93,6 +267,10 @@ function renderQuestion() {
             <div class="flip-digit" data-digit="s2"></div>
           </div>
         </div>
+        <div class="nav-buttons">
+          ${renderNavBtn("上一題", "prev", currentIndex === 0)}
+          ${renderNavBtn(currentIndex + 1 >= TOTAL_QUESTIONS ? "查看結果" : "下一題", "next")}
+        </div>
         <div class="question-count progress-pill"><span></span>第 ${currentIndex + 1} 題 / 共 ${TOTAL_QUESTIONS} 題</div>
       </header>
 
@@ -109,13 +287,20 @@ function renderQuestion() {
   app.querySelectorAll("[data-choice]").forEach((button) => {
     button.addEventListener("click", () => handleChoiceClick(button, question));
   });
+
+  const prevBtn = app.querySelector("[data-action='prev']");
+  const nextBtn = app.querySelector("[data-action='next']");
+  if (prevBtn) prevBtn.addEventListener("click", () => { sfxNav(); goPrev(); });
+  if (nextBtn) nextBtn.addEventListener("click", () => { sfxNav(); goNext(); });
+  initNavParticles();
   updateTimerDisplay();
-  timerId = window.setInterval(tick, 1000);
+  timerId = window.setInterval(tick, 250);
   refreshLiquidGlass();
 }
 
 function tick() {
-  remainingSeconds -= 1;
+  const msLeft = timerDeadlineMs - Date.now();
+  remainingSeconds = Math.max(0, Math.ceil(msLeft / 1000));
   updateTimerDisplay();
 
   if (remainingSeconds <= 0) {
@@ -126,25 +311,23 @@ function tick() {
 function updateTimerDisplay() {
   const timerEl = app.querySelector("[data-timer]");
   if (!timerEl) return;
+  const timerCard = timerEl.closest(".timer-card");
+  const msLeft = Math.max(0, timerDeadlineMs - Date.now());
+  const elapsedRatio = durationSeconds > 0
+    ? Math.min(1, Math.max(0, 1 - (msLeft / (durationSeconds * 1000))))
+    : 1;
+
+  if (timerCard) {
+    timerCard.style.setProperty("--timer-progress", elapsedRatio.toFixed(4));
+    timerCard.style.setProperty("--timer-progress-angle", `${(elapsedRatio * 360).toFixed(2)}deg`);
+  }
 
   const t = formatSeconds(remainingSeconds);
   const digits = [t[0], t[1], t[3], t[4]];
-  const animatable = new Set(["m2", "s2"]);
   ["m1", "m2", "s1", "s2"].forEach((key, i) => {
     const el = timerEl.querySelector(`[data-digit="${key}"]`);
     if (!el) return;
-    const next = digits[i];
-    const prev = el.dataset.current;
-    if (prev === undefined) {
-      setFlipDigit(el, next);
-    } else if (next !== prev) {
-      if (animatable.has(key)) {
-        animateFlipDigit(el, prev, next);
-      } else {
-        setFlipDigit(el, next);
-      }
-    }
-    el.dataset.current = next;
+    setFlipDigit(el, digits[i]);
   });
 
   timerEl.classList.toggle("is-hot", remainingSeconds <= 10);
@@ -153,11 +336,27 @@ function updateTimerDisplay() {
 }
 
 function setFlipDigit(el, val) {
-  el.innerHTML = `<span>${val}</span>`;
+  if (el.dataset.current === val) return;
+
+  const oldVal = el.dataset.current;
+  if (oldVal === undefined) {
+    el.innerHTML = `<span class="numeric-digit-current">${val}</span>`;
+    el.dataset.current = val;
+    return;
+  }
+
+  el.innerHTML = `
+    <span class="numeric-digit-old">${oldVal}</span>
+    <span class="numeric-digit-new">${val}</span>
+  `;
+  el.dataset.current = val;
 }
 
-function animateFlipDigit(el, prev, next) {
-  el.innerHTML = `<span class="digit-out">${prev}</span><span class="digit-in">${next}</span>`;
+function goPrev() {
+  clearTimer();
+  if (currentIndex <= 0) return;
+  currentIndex -= 1;
+  renderQuestion();
 }
 
 function goNext() {
@@ -298,12 +497,14 @@ function handleChoiceClick(button, question) {
   });
 
   if (isCorrect) {
+    sfxCorrect();
     button.classList.add("correct");
     button.querySelector(".choice-state").innerHTML = svgCorrect;
     showToast("答對了！這就是 Swift 正確語法。");
     return;
   }
 
+  sfxWrong();
   button.classList.add("wrong");
   button.querySelector(".choice-state").innerHTML = svgWrong;
   buttons.forEach((item) => {
