@@ -20,7 +20,7 @@ let liquidGlassId = null;
 let musicOn = false;
 const musicBtn = document.getElementById("music-btn");
 
-// ── 背景音樂（由 music.js 的 Web Audio loop 驅動）──────────────────────────
+// ── 背景音樂（由 music.js 的 MP3 player 驅動）──────────────────────────
 
 async function initMusic() { /* no-op: Strudel initialises lazily on first toggle */ }
 
@@ -61,6 +61,15 @@ async function startMusic() {
     updateMusicBtn();
     showToast("音樂啟動失敗，請確認瀏覽器音訊權限。");
   }
+}
+
+function stopMusic() {
+  if (window.quizMusicStop) {
+    musicOn = Boolean(window.quizMusicStop());
+  } else {
+    musicOn = false;
+  }
+  updateMusicBtn();
 }
 
 function updateMusicBtn() {
@@ -177,6 +186,7 @@ function letterPullUp(text, delayMs = 50) {
 
 function renderStart() {
   clearTimer();
+  stopMusic();
   app.innerHTML = `
     <section class="stage start-card">
       <div>
@@ -372,6 +382,7 @@ function goNext() {
 
 function renderResults() {
   clearTimer();
+  stopMusic();
   app.innerHTML = `
     <section class="result-shell">
       <header class="result-header">
@@ -685,6 +696,7 @@ function refreshLiquidGlass() {
 
 function renderError(error) {
   clearTimer();
+  stopMusic();
   app.innerHTML = `
     <section class="error-card liquid-glass">
       <h1>無法啟動題庫</h1>
