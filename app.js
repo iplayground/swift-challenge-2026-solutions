@@ -427,7 +427,7 @@ function renderResultCard(question, index) {
   const referenceLinks = getReferenceLinks(question);
   const author = typeof question.author === "string" && question.author.trim()
     ? question.author.trim()
-    : "iPlayground 2026團隊";
+    : "iPlayground 2026 team";
   return `
     <article class="result-card">
       <div class="result-meta">
