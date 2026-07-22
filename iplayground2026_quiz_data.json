@@ -286,5 +286,113 @@
     ],
     "reason": "https://swift-everywhere.org/\nhttps://machinelearning.apple.com/research/exploring-llms-mlx-m5\nhttps://blog.tensorflow.org/2018/04/introducing-swift-for-tensorflow.html",
     "author": "iPlayground 2026團隊"
+  },
+  {
+    "index": 25,
+    "question": "以下程式碼執行後會輸出什麼？\n\n```swift\nprotocol ProtocolA {\n    func doThings()\n}\n\nextension ProtocolA {\n    func doThings() {\n        print(\"A\")\n    }\n}\n\nclass ObjectB: ProtocolA {\n    func doThings() {\n        print(\"B\")\n    }\n}\n\nclass ObjectC: ObjectB {}\n\nlet object = ObjectC()\nobject.doThings()\n```",
+    "answer": "B",
+    "choices": [
+      "A",
+      "編譯失敗",
+      "沒有輸出"
+    ],
+    "reason": "ObjectB 直接實作 ProtocolA 的 doThings() requirement，ObjectC 繼承 ObjectB 的實作，因此以具體型別 ObjectC 呼叫時會輸出 B。",
+    "author": "Han Yu"
+  },
+  {
+    "index": 26,
+    "question": "以下程式碼執行後會輸出什麼？\n\n```swift\nprotocol ProtocolA {\n    func doThings()\n}\n\nextension ProtocolA {\n    func doThings() {\n        print(\"A\")\n    }\n}\n\nclass ObjectB: ProtocolA {\n    func doThings() {\n        print(\"B\")\n    }\n}\n\nclass ObjectC: ObjectB {}\n\nlet object: ProtocolA = ObjectC()\nobject.doThings()\n```",
+    "answer": "B",
+    "choices": [
+      "A",
+      "編譯失敗",
+      "沒有輸出"
+    ],
+    "reason": "doThings() 是 ProtocolA 的 requirement，而 ObjectB 的實作已成為該 conformance 的 witness。即使 object 的靜態型別是 ProtocolA，透過 witness table 動態派發後仍會呼叫 ObjectB.doThings()，因此輸出 B。",
+    "author": "Han Yu"
+  },
+  {
+    "index": 27,
+    "question": "以下程式碼執行後會輸出什麼？\n\n```swift\nprotocol ProtocolA {\n    func doThings()\n}\n\nextension ProtocolA {\n    func doThings() {\n        print(\"A\")\n    }\n}\n\nprotocol ProtocolB: ProtocolA {}\n\nextension ProtocolB {\n    func doThings() {\n        print(\"B\")\n    }\n}\n\nclass ObjectC: ProtocolA {}\n\nclass ObjectD: ObjectC, ProtocolB {}\n\nlet object = ObjectD()\nobject.doThings()\n```",
+    "answer": "B",
+    "choices": [
+      "A",
+      "編譯失敗",
+      "沒有輸出"
+    ],
+    "reason": "object 的靜態型別是具體的 ObjectD。ObjectD 同時符合更精確的 ProtocolB，因此 overload resolution 會選擇 ProtocolB extension 中的 doThings()，輸出 B。",
+    "author": "Han Yu"
+  },
+  {
+    "index": 28,
+    "question": "以下程式碼執行後會輸出什麼？\n\n```swift\nprotocol MyProtocolA {\n    func doThings()\n}\n\nextension MyProtocolA {\n    func doThings() {\n        print(\"A\")\n    }\n}\n\nprotocol MyProtocolB: MyProtocolA {}\n\nextension MyProtocolB {\n    func doThings() {\n        print(\"B\")\n    }\n}\n\nclass MyObject: MyProtocolB {}\n\nlet object: MyProtocolA = MyObject()\nobject.doThings()\n```",
+    "answer": "B",
+    "choices": [
+      "A",
+      "編譯失敗",
+      "沒有輸出"
+    ],
+    "reason": "MyObject 透過 MyProtocolB 符合 MyProtocolA，而較精確的 MyProtocolB extension 實作會被選為 doThings() requirement 的 witness。轉成 MyProtocolA existential 後仍透過 witness table 呼叫該實作，因此輸出 B。",
+    "author": "Han Yu"
+  },
+  {
+    "index": 29,
+    "question": "以下程式碼執行後會輸出什麼？\n\n```swift\nprotocol MyProtocolA {\n    func doThings()\n}\n\nextension MyProtocolA {\n    func doThings() {\n        print(\"A\")\n    }\n}\n\nprotocol MyProtocolB: MyProtocolA {}\n\nextension MyProtocolB {\n    func doThings() {\n        print(\"B\")\n    }\n}\n\nclass MyObject: MyProtocolA, MyProtocolB {}\n\nlet object: MyProtocolA = MyObject()\nobject.doThings()\n```",
+    "answer": "B",
+    "choices": [
+      "A",
+      "編譯失敗",
+      "沒有輸出"
+    ],
+    "reason": "MyProtocolB 繼承 MyProtocolA，因此其 extension 提供的是更精確的預設實作。MyObject 的 MyProtocolA conformance 會使用這個實作作為 doThings() 的 witness，所以透過 MyProtocolA 呼叫仍輸出 B。",
+    "author": "Han Yu"
+  },
+  {
+    "index": 30,
+    "question": "以下程式碼執行後會輸出什麼？\n\n```swift\nprotocol MyProtocolA {\n    func doThings()\n}\n\nextension MyProtocolA {\n    func doThings() {\n        print(\"A\")\n    }\n\n    func doOtherThings() {\n        print(\"A\")\n    }\n}\n\nprotocol MyProtocolB: MyProtocolA {}\n\nextension MyProtocolB {\n    func doThings() {\n        print(\"B\")\n    }\n\n    func doOtherThings() {\n        print(\"B\")\n    }\n}\n\nclass MyObject: MyProtocolB {}\n\nlet object: MyProtocolA = MyObject()\nobject.doOtherThings()\n```",
+    "answer": "A",
+    "choices": [
+      "B",
+      "編譯失敗",
+      "沒有輸出"
+    ],
+    "reason": "doOtherThings() 並不是 MyProtocolA 宣告的 requirement，只是 extension method，因此不會透過 witness table 動態派發。object 的靜態型別是 MyProtocolA，會靜態選擇 MyProtocolA extension 的實作並輸出 A。",
+    "author": "Han Yu"
+  },
+  {
+    "index": 31,
+    "question": "以下程式碼能否通過編譯？若能，會輸出什麼？\n\n```swift\nprotocol Direction {\n    func go()\n}\n\nprotocol Up: Direction {}\n\nextension Up {\n    func go() {\n        print(\"Up\")\n    }\n}\n\nprotocol Down: Direction {}\n\nextension Down {\n    func go() {\n        print(\"Down\")\n    }\n}\n\nclass MyObject: Up, Down {}\n\nlet object = MyObject()\nobject.go()\n```",
+    "answer": "編譯失敗：go() 有多個相符的預設實作，呼叫不明確",
+    "choices": [
+      "Up",
+      "Down",
+      "MyObject"
+    ],
+    "reason": "Up 與 Down 都繼承 Direction，且各自提供相同簽名的 go() 預設實作。MyObject 同時符合兩者卻沒有自行實作 go()，編譯器無法選擇唯一的 witness，因此 conformance 與呼叫都會產生歧義錯誤。",
+    "author": "Han Yu"
+  },
+  {
+    "index": 32,
+    "question": "以下程式碼執行後會輸出什麼？\n\n```swift\nprotocol Direction {\n    func go()\n}\n\nprotocol Up: Direction {}\n\nextension Up {\n    func go() {\n        print(\"Up\")\n    }\n}\n\nprotocol Down: Direction {}\n\nextension Down {\n    func go() {\n        print(\"Down\")\n    }\n}\n\nclass MyObject: Up, Down {\n    func go() {\n        print(\"MyObject\")\n    }\n}\n\nlet object = MyObject()\nobject.go()\n```",
+    "answer": "MyObject",
+    "choices": [
+      "Up",
+      "Down",
+      "編譯失敗"
+    ],
+    "reason": "MyObject 自行實作 Direction requirement 的 go()，因此消除了 Up 與 Down 預設實作之間的歧義。以具體型別呼叫時會執行 MyObject.go()。",
+    "author": "Han Yu"
+  },
+  {
+    "index": 33,
+    "question": "以下程式碼執行後會輸出什麼？\n\n```swift\nprotocol Direction {\n    func go()\n}\n\nprotocol Up: Direction {}\n\nextension Up {\n    func go() {\n        print(\"Up\")\n    }\n}\n\nprotocol Down: Direction {}\n\nextension Down {\n    func go() {\n        print(\"Down\")\n    }\n}\n\nclass MyObject: Up, Down {\n    func go() {\n        print(\"MyObject\")\n    }\n}\n\nlet object: Up = MyObject()\nobject.go()\n```",
+    "answer": "MyObject",
+    "choices": [
+      "Up",
+      "Down",
+      "編譯失敗"
+    ],
+    "reason": "go() 是 Direction 的 protocol requirement，MyObject 的實作會成為 conformance witness。即使 object 的靜態型別是 Up，呼叫仍透過 witness table 動態派發到 MyObject.go()，因此輸出 MyObject。",
+    "author": "Han Yu"
   }
 ]
