@@ -213,7 +213,7 @@
       "已安裝到裝置上的 App 會無法開啟，需要先刪除 App 並再次下載同一版 App 才能繼續使用"
     ],
     "reason": "企業版發佈的 App 因為可以不受 App Store 審核，因此在憑證簽名的驗證更為嚴格。當後台的憑證被刪除後，很快會導致該憑證簽署的 App 無法通過驗證而無法開啟，唯有盡快發佈一版以有效憑證簽署的 App 才能挽救局面。個人版 Apple 開發者帳號則只會在打包上傳時驗證簽名，發佈憑證過期或刪除都不會影響已上架的版本。",
-    "author": "iPlayground 2026團隊"
+    "author": "Jack"
   },
   {
     "index": 19,
@@ -225,7 +225,7 @@
       "UICollectionViewDataSource"
     ],
     "reason": "UICollectionViewDelegate 是 UICollectionViewDelegateFlowLayout 的 base protocol；UICollectionViewFlowLayoutDelegate 並不存在；UICollectionViewDataSource 與 flow layout 無關。正確答案是 UICollectionViewDelegateFlowLayout。",
-    "author": "iPlayground 2026團隊"
+    "author": "Jeff Lin"
   },
   {
     "index": 20,
