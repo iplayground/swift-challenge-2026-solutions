@@ -425,11 +425,14 @@ function renderFillBlankNotice() {
 function renderResultCard(question, index) {
   const content = parseQuestionContent(question.question);
   const referenceLinks = getReferenceLinks(question);
+  const author = typeof question.author === "string" && question.author.trim()
+    ? question.author.trim()
+    : "iPlayground 2026團隊";
   return `
     <article class="result-card">
       <div class="result-meta">
         <span>第 ${index + 1} 題</span>
-        <span>${escapeHtml(question.author || "Unknown")}</span>
+        <span>出題者：${escapeHtml(author)}</span>
       </div>
       <div class="result-question">
         ${renderPlainText(content.title)}

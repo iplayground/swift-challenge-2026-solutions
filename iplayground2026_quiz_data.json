@@ -9,7 +9,7 @@
       "var r = numbers; r.sort(); return r"
     ],
     "reason": "sorted() 回傳新的已排序陣列（non-mutating），符合 -> [Int] 的回傳值需求。sort() 直接修改原陣列（mutating），回傳 Void，無法用在這裡。C 語法錯誤：sorted() 本身就是回傳值，不能再用 return 包裹成獨立表達式。D 手動複製再 sort 雖可運作但多此一舉。",
-    "author": "iPlayground 2026 Swift Quiz"
+    "author": "iPlayground 2026團隊"
   },
   {
     "index": 2,
@@ -21,7 +21,7 @@
       "fatalError()"
     ],
     "reason": "guard 的 else 區塊必須確保後續程式碼不會被執行到。assertionFailure() 回傳 Void，在開啟最佳化（非 -Onone）模式下程式會繼續執行，無法滿足控制流保證，所以編譯失敗。fatalError() 回傳 Never（代表絕對終止），可以使用。",
-    "author": "iPlayground 2026 Swift Quiz"
+    "author": "iPlayground 2026團隊"
   },
   {
     "index": 3,
@@ -33,7 +33,7 @@
       "String"
     ],
     "reason": "Never 是 Swift 的「不可居住型別（uninhabited type）」，無法建立 Never 型別的實例。呼叫 fatalError() 後程式一定終止，後續程式碼絕對不會執行，因此可以滿足 guard else 的控制流要求。同理 preconditionFailure() 也是 Never 型別。",
-    "author": "iPlayground 2026 Swift Quiz"
+    "author": "iPlayground 2026團隊"
   },
   {
     "index": 4,
@@ -45,7 +45,7 @@
       "func <(l: Self, r: Self) -> Bool { ... }"
     ],
     "reason": "Comparable 要求 < 必須是 static 方法且使用具體型別名稱。A 是 static 但用了 Self（協定要求明確寫出具體型別）。B 缺少 static。D 同時缺少 static 又用了 Self，兩個問題都有。只有 C 正確。",
-    "author": "iPlayground 2026 Swift Quiz"
+    "author": "iPlayground 2026團隊"
   },
   {
     "index": 5,
@@ -57,7 +57,7 @@
       "\"\\value\""
     ],
     "reason": "Swift 字串插值語法為 \\(變數名)。$ 與 ${ } 是 JavaScript 等語言的寫法，Swift 不支援。",
-    "author": "iPlayground 2026 Swift Quiz"
+    "author": "iPlayground 2026團隊"
   },
   {
     "index": 6,
@@ -69,7 +69,7 @@
       "catch as FooError"
     ],
     "reason": "catch is FooError 是型別轉換模式（type-casting pattern），當錯誤是 FooError 型別時就匹配。catch as 的正確寫法是 catch let error as FooError（需要綁定變數），不能單獨使用 catch as FooError。",
-    "author": "iPlayground 2026 Swift Quiz"
+    "author": "iPlayground 2026團隊"
   },
   {
     "index": 7,
@@ -81,7 +81,7 @@
       "IntegerLiteralType"
     ],
     "reason": "Swift 提供 ExpressibleByXXXLiteral 系列協定讓型別支援 Literal 初始化。IntegerLiteralType 是 Int 的型別別名（typealias），不是協定，容易混淆。BinaryInteger 和 Numeric 是數值運算相關的協定，與 Literal 初始化無關。",
-    "author": "iPlayground 2026 Swift Quiz"
+    "author": "iPlayground 2026團隊"
   },
   {
     "index": 8,
@@ -93,7 +93,7 @@
       "傳 non-throwing 閉包，有 try"
     ],
     "reason": "rethrows 表示：只有當傳入的閉包會拋出錯誤時，函式才會拋出錯誤。傳入 non-throwing 閉包時，等同普通函式，呼叫端不需要 try，也不需要 throws。A 錯在傳入 throwing 閉包卻沒有 try。C 錯在呼叫端沒有 throws 卻傳入 throwing 閉包並加了 try。",
-    "author": "iPlayground 2026 Swift Quiz"
+    "author": "iPlayground 2026團隊"
   },
   {
     "index": 9,
@@ -105,7 +105,7 @@
       "move(to destination: origin)"
     ],
     "reason": "to 是引數標籤（argument label，外部名稱），destination 是參數名稱（parameter name，內部使用）。呼叫時使用引數標籤，所以要寫 move(to: origin)。Swift 函式可以有不同的外部與內部名稱，讓呼叫端讀起來更像自然語言。",
-    "author": "iPlayground 2026 Swift Quiz"
+    "author": "iPlayground 2026團隊"
   },
   {
     "index": 10,
@@ -117,7 +117,7 @@
       "視 bar 是否為 nil 而不同"
     ],
     "reason": "try? 和 Optional Chaining 都不會讓 Optional 重複巢套。Swift 5 修改了規格：try? 套用在一個 Optional 結果上，不會產生 Optional<Optional<T>>，而是自動壓平為 Optional<T>。所以結果是 Foo? 而非 Foo??。",
-    "author": "iPlayground 2026 Swift Quiz"
+    "author": "iPlayground 2026團隊"
   },
   {
     "index": 11,
@@ -129,7 +129,7 @@
       "編譯錯誤"
     ],
     "reason": "rethrows 函式只有在傳入的閉包會拋出錯誤時，才等同有 throws。如果傳入 non-throwing 閉包，呼叫端無需 try 也無需 throws，等同普通函式呼叫。",
-    "author": "iPlayground 2026 Swift Quiz"
+    "author": "iPlayground 2026團隊"
   },
   {
     "index": 12,
@@ -141,7 +141,7 @@
       "private 可讓整個檔案存取"
     ],
     "reason": "private：只有宣告它的型別或作用域（含 nested type）可以存取，就算在同一個檔案的 extension 也不行。fileprivate：同一個檔案中的所有程式碼（包含 extension）皆可存取。C 和 D 是常見的誤解：fileprivate 僅限同一檔案，不及於整個模組；private 也不是檔案層級。",
-    "author": "iPlayground 2026 Swift Quiz"
+    "author": "iPlayground 2026團隊"
   },
   {
     "index": 13,
@@ -153,7 +153,7 @@
       "A-1: all, A-2: Preview, A-3: vertical, A-4: LazyVStack"
     ],
     "reason": "ScrollView 的滾動方向使用 .vertical（可省略，預設就是 vertical）。VStack 垂直排列子視圖，可設定 spacing。.padding(.top, 64) 在頂部加上 64 pt 的留白。#Preview 是 Swift 5.9 引入的 Preview 巨集，用來取代舊的 PreviewProvider。",
-    "author": "iPlayground 2026 SwiftUI Quiz"
+    "author": "iPlayground 2026團隊"
   },
   {
     "index": 14,
@@ -165,7 +165,7 @@
       "A-1: foreground, A-2: height, A-3: bold, A-4: trailing, A-5: View"
     ],
     "reason": ".foregroundStyle 將 LinearGradient 套用在前景色上。frame 需要同時指定 width 和 height。some View 是協定遵循的不透明回傳型別（opaque return type）。.font(.system(size:weight:)) 中的 weight 用 .bold。將 Gradient.Stop 同座標放兩個可製作縞狀效果，呈現仿 Apple Logo 六色彩虹。",
-    "author": "iPlayground 2026 SwiftUI Quiz"
+    "author": "iPlayground 2026團隊"
   },
   {
     "index": 15,
@@ -177,7 +177,7 @@
       "Task 和 Task.detached 都不在 MainActor 上執行"
     ],
     "reason": "Task 繼承呼叫端的 actor context，因此在 @MainActor 函式內建立的 Task 也會在 MainActor 上執行。Task.detached 不繼承任何 actor context，會在任意執行緒上執行，不保證是 MainActor。這是兩者最關鍵的差異。",
-    "author": "iPlayground 2026 Swift Concurrency Quiz"
+    "author": "iPlayground 2026團隊"
   },
   {
     "index": 16,
@@ -189,7 +189,7 @@
       "視 Baz 是否也標記 @MainActor 而定"
     ],
     "reason": "class 加上 @MainActor 後，其所有成員（包含函式和屬性）都是 MainActor isolated。子類別 Baz 繼承 Foo，override 的 bar() 也維持 MainActor isolated，不會因為 override 而失去 actor 保護。若要在子類別中移除 MainActor，需要明確標記 nonisolated。",
-    "author": "iPlayground 2026 Swift Concurrency Quiz"
+    "author": "iPlayground 2026團隊"
   },
   {
     "index": 17,
@@ -201,6 +201,90 @@
       "取決於 asyncTask 的回傳值型別"
     ],
     "reason": "① heavyWork() 在 MainActor 上同步執行。② await asyncTask() 讓函式在此點暫停（suspension point），asyncTask 本身在哪個 actor 執行取決於其定義。③ await 結束後，控制流回到原本的 @MainActor 函式，update2() 在 MainActor 上執行。重點：await 後的程式碼也受 MainActor 保護，不會跑到其他執行緒。",
-    "author": "iPlayground 2026 Swift Concurrency Quiz"
+    "author": "iPlayground 2026團隊"
+  },
+  {
+    "index": 18,
+    "question": "使用企業 Apple 開發者帳號時，如果把發布憑證從開發者後台刪除，對使用該憑證簽署的 App 會有什麼影響？",
+    "answer": "已安裝到裝置上的 App 會無法開啟，而且同一版 App 無法重新安裝",
+    "choices": [
+      "已安裝到裝置上的 App 不受影響，可以繼續使用",
+      "已安裝到裝置上的 App 會無法開啟，需要再次下載同一版 App 才能繼續使用",
+      "已安裝到裝置上的 App 會無法開啟，需要先刪除 App 並再次下載同一版 App 才能繼續使用"
+    ],
+    "reason": "企業版發佈的 App 因為可以不受 App Store 審核，因此在憑證簽名的驗證更為嚴格。當後台的憑證被刪除後，很快會導致該憑證簽署的 App 無法通過驗證而無法開啟，唯有盡快發佈一版以有效憑證簽署的 App 才能挽救局面。個人版 Apple 開發者帳號則只會在打包上傳時驗證簽名，發佈憑證過期或刪除都不會影響已上架的版本。",
+    "author": "iPlayground 2026團隊"
+  },
+  {
+    "index": 19,
+    "question": "UICollectionView 如果要套用基本的 UICollectionViewFlowLayout，該實作什麼 protocol？",
+    "answer": "UICollectionViewDelegateFlowLayout",
+    "choices": [
+      "UICollectionViewDelegate",
+      "UICollectionViewFlowLayoutDelegate",
+      "UICollectionViewDataSource"
+    ],
+    "reason": "UICollectionViewDelegate 是 UICollectionViewDelegateFlowLayout 的 base protocol；UICollectionViewFlowLayoutDelegate 並不存在；UICollectionViewDataSource 與 flow layout 無關。正確答案是 UICollectionViewDelegateFlowLayout。",
+    "author": "iPlayground 2026團隊"
+  },
+  {
+    "index": 20,
+    "question": "App 要 build 在實機上，除了 certificate，還需要準備哪些資料？",
+    "answer": "provisioning profiles、裝置 UDID",
+    "choices": [
+      "DeviceCheck key、裝置 UDID",
+      "DeviceCheck key、裝置 token",
+      "provisioning profiles、裝置 Serial number"
+    ],
+    "reason": "DeviceCheck key 與 App Attest 相關；裝置 token 用在推播註冊；裝置 Serial number 與 build 無關。要在實機上 build，需準備 provisioning profiles 與裝置 UDID。",
+    "author": "iPlayground 2026團隊"
+  },
+  {
+    "index": 21,
+    "question": "身為一個 iOS 工程師，台北必吃的咖哩是什麼？",
+    "answer": "笑貓咖哩",
+    "choices": [
+      "肯德基",
+      "麥當勞",
+      "摩斯漢堡"
+    ],
+    "reason": "請參閱 Pofat 的 iOS 工程師小旅行（第二站：iOS 工程師不可錯過的「笑貓咖哩」）。",
+    "author": "iPlayground 2026團隊"
+  },
+  {
+    "index": 22,
+    "question": "蘋果公司最早開發的瀏覽器是什麼？",
+    "answer": "Cyberdog",
+    "choices": [
+      "Internet Explorer",
+      "Safari",
+      "Netscape Navigator"
+    ],
+    "reason": "Cyberdog，由 Apple Computer 於 1996 年推出。\nhttps://zh.wikipedia.org/zh-tw/Cyberdog",
+    "author": "iPlayground 2026團隊"
+  },
+  {
+    "index": 23,
+    "question": "以下程式碼會輸出什麼？\n\n```swift\nimport Algorithms\n\nlet x = 10\nprint((0 ..< x).partitioningIndex { $0 * $0 >= x })\n```",
+    "answer": "4",
+    "choices": [
+      "3",
+      "10",
+      "Optional(3)"
+    ],
+    "reason": "這段程式碼利用 binary search 找出 √x 的上界（ceiling），因此答案是 4。",
+    "author": "iPlayground 2026團隊"
+  },
+  {
+    "index": 24,
+    "question": "Swift 可用在哪些應用領域？",
+    "answer": "Apple apps、server、machine learning、Linux apps、Android apps、Windows apps、embedded、WebAssembly",
+    "choices": [
+      "Apple apps、server",
+      "Apple apps、server、machine learning",
+      "Apple apps、server、machine learning、Linux apps、Android apps、Windows apps"
+    ],
+    "reason": "https://swift-everywhere.org/\nhttps://machinelearning.apple.com/research/exploring-llms-mlx-m5\nhttps://blog.tensorflow.org/2018/04/introducing-swift-for-tensorflow.html",
+    "author": "iPlayground 2026團隊"
   }
 ]
